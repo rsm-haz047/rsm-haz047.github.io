@@ -4,20 +4,18 @@ project:
 
 website:
   title: "hanhuazhu's website"
-navbar:
-  left:
-    - text: About
-      href: index.qmd
-    - text: Resume
-      href: resume.qmd     
-    - text: Projects
-      href: blog.qmd
+  navbar:
+    left:
+      - href: index.qmd
+        text: About
+      - href: resume.qmd
+        text: Resume
+      - href: blog.qmd
+        text: Projects
 
 format:
   html:
-    theme:
-      - cosmo
-      - brand
+    theme: cosmo
     css: styles.css
     toc: true
 
