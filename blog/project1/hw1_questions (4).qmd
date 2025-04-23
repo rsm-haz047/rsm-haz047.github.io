@@ -460,7 +460,7 @@ plt.show()
 
 ---
 
-### 📝 Interpretation
+###  Interpretation
 
 > **Interpretation**:  
 > These four histograms illustrate the **Central Limit Theorem** using simulated sample means of donation rate differences between the treatment (p = 0.022) and control (p = 0.018) groups.  
