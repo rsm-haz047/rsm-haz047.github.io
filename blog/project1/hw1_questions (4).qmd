@@ -32,10 +32,9 @@ import statsmodels.api as sm
 import statsmodels.formula.api as smf
 from scipy import stats
 
-# Load the dataset using the correct filename
-data = pd.read_stata("karlan_list_2007 (2).dta")
+data = pd.read_stata("/Users/hanhuazhu/Downloads/karlan_list_2007 (2).dta")
 
-# Preview the first few rows
+# Preview first few rows
 data.head()
 ```
 
