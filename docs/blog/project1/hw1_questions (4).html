@@ -174,14 +174,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#regression-on-match-ratio-categorical" id="toc-regression-on-match-ratio-categorical" class="nav-link" data-scroll-target="#regression-on-match-ratio-categorical">Regression on Match Ratio (Categorical)</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   <li><a href="#size-of-charitable-contribution" id="toc-size-of-charitable-contribution" class="nav-link" data-scroll-target="#size-of-charitable-contribution">Size of Charitable Contribution</a></li>
-  <li><a href="#interpretation" id="toc-interpretation" class="nav-link" data-scroll-target="#interpretation">📝 Interpretation</a></li>
+  <li><a href="#interpretation" id="toc-interpretation" class="nav-link" data-scroll-target="#interpretation">Interpretation</a></li>
   </ul></li>
   <li><a href="#simulation-experiment" id="toc-simulation-experiment" class="nav-link" data-scroll-target="#simulation-experiment">Simulation Experiment</a>
   <ul class="collapse">
   <li><a href="#law-of-large-numbers" id="toc-law-of-large-numbers" class="nav-link" data-scroll-target="#law-of-large-numbers">Law of Large Numbers</a></li>
-  <li><a href="#law-of-large-numbers-1" id="toc-law-of-large-numbers-1" class="nav-link" data-scroll-target="#law-of-large-numbers-1">Law of Large Numbers</a></li>
   <li><a href="#interpretation-1" id="toc-interpretation-1" class="nav-link" data-scroll-target="#interpretation-1">Interpretation</a></li>
-  <li><a href="#central-limit-theorem" id="toc-central-limit-theorem" class="nav-link" data-scroll-target="#central-limit-theorem">Central Limit Theorem</a></li>
   <li><a href="#interpretation-2" id="toc-interpretation-2" class="nav-link" data-scroll-target="#interpretation-2">Interpretation</a></li>
   </ul></li>
   </ul>
@@ -234,7 +232,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
 <p>We load and explore the dataset from Karlan and List (2007).</p>
-<div id="27aa5eaa" class="cell" data-execution_count="1">
+<div id="5dabc3f4" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -630,7 +628,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="balance-test">Balance Test</h3>
 <p>As an ad hoc test of the randomization mechanism, I provide a series of tests that compare aspects of the treatment and control groups to assess whether they are statistically significantly different from one another.</p>
 <p>We test whether months since last donation (<code>mrm2</code>) differ between treatment and control groups using both a t-test and a linear regression.</p>
-<div id="4a0f88fc" class="cell" data-execution_count="2">
+<div id="9344d363" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># T-test for mrm2</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>treat <span class="op">=</span> data[data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>][<span class="st">'mrm2'</span>].dropna()</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>control <span class="op">=</span> data[data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">0</span>][<span class="st">'mrm2'</span>].dropna()</span>
@@ -642,7 +640,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 T-statistic: 0.120, p-value: 0.905</code></pre>
 </div>
 </div>
-<div id="b3aa5f26" class="cell" data-execution_count="3">
+<div id="be077c92" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># OLS regression: mrm2 ~ treatment</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> smf.ols(<span class="st">"mrm2 ~ treatment"</span>, data<span class="op">=</span>data).fit()</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>model.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -676,7 +674,7 @@ T-statistic: 0.120, p-value: 0.905</code></pre>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">Time:</td>
-<td>20:50:28</td>
+<td>20:53:47</td>
 <td data-quarto-table-cell-role="th">Log-Likelihood:</td>
 <td>-1.9585e+05</td>
 </tr>
@@ -791,7 +789,7 @@ T-statistic: 0.120, p-value: 0.905</code></pre>
 <section id="charitable-contribution-made-1" class="level3">
 <h3 class="anchored" data-anchor-id="charitable-contribution-made-1">Charitable Contribution Made</h3>
 <p>We examine whether the treatment group had a higher donation rate compared to the control group.</p>
-<div id="738675bf" class="cell" data-execution_count="4">
+<div id="4c2ebee2" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Barplot of donation rate by treatment</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>sns.barplot(data<span class="op">=</span>data, x<span class="op">=</span><span class="st">"treatment"</span>, y<span class="op">=</span><span class="st">"gave"</span>, ci<span class="op">=</span><span class="va">None</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plt.xticks([<span class="dv">0</span>, <span class="dv">1</span>], [<span class="st">"Control"</span>, <span class="st">"Treatment"</span>])</span>
@@ -799,7 +797,7 @@ T-statistic: 0.120, p-value: 0.905</code></pre>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Donation Rate by Treatment Group"</span>)</span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/n6/y_4fsn553lq6_fzmfb11cjth0000gn/T/ipykernel_98718/113081018.py:2: FutureWarning:
+<pre><code>/var/folders/n6/y_4fsn553lq6_fzmfb11cjth0000gn/T/ipykernel_330/113081018.py:2: FutureWarning:
 
 
 
@@ -815,7 +813,7 @@ The `ci` parameter is deprecated. Use `errorbar=None` for the same effect.
 </div>
 </div>
 </div>
-<div id="e32778a1" class="cell" data-execution_count="5">
+<div id="e252b724" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># T-test on binary outcome (gave)</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>treat <span class="op">=</span> data[data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>][<span class="st">'gave'</span>]</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>control <span class="op">=</span> data[data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">0</span>][<span class="st">'gave'</span>]</span>
@@ -827,7 +825,7 @@ The `ci` parameter is deprecated. Use `errorbar=None` for the same effect.
 T-statistic: 3.209, p-value: 0.001</code></pre>
 </div>
 </div>
-<div id="28eba6ef" class="cell" data-execution_count="6">
+<div id="82542271" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bivariate OLS regression: gave ~ treatment</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> smf.ols(<span class="st">"gave ~ treatment"</span>, data<span class="op">=</span>data).fit()</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>model.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -861,7 +859,7 @@ T-statistic: 3.209, p-value: 0.001</code></pre>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">Time:</td>
-<td>20:50:28</td>
+<td>20:53:47</td>
 <td data-quarto-table-cell-role="th">Log-Likelihood:</td>
 <td>26630.</td>
 </tr>
@@ -957,7 +955,7 @@ T-statistic: 3.209, p-value: 0.001</code></pre>
 <br><br>Notes:<br>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
 </div>
 </div>
-<div id="cd742d19" class="cell" data-execution_count="7">
+<div id="4093af87" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Probit regression: gave ~ treatment</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>probit_model <span class="op">=</span> smf.probit(<span class="st">"gave ~ treatment"</span>, data<span class="op">=</span>data).fit()</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>probit_model.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -996,7 +994,7 @@ T-statistic: 3.209, p-value: 0.001</code></pre>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">Time:</td>
-<td>20:50:28</td>
+<td>20:53:47</td>
 <td data-quarto-table-cell-role="th">Log-Likelihood:</td>
 <td>-5030.5</td>
 </tr>
@@ -1072,7 +1070,7 @@ T-statistic: 3.209, p-value: 0.001</code></pre>
 </section>
 <section id="t-tests-for-match-ratios" class="level3">
 <h3 class="anchored" data-anchor-id="t-tests-for-match-ratios">T-tests for Match Ratios</h3>
-<div id="9090ad7b" class="cell" data-execution_count="8">
+<div id="330261c5" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter only treatment group and each match ratio</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>ratio1 <span class="op">=</span> data[(data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>) <span class="op">&amp;</span> (data[<span class="st">'ratio'</span>] <span class="op">==</span> <span class="dv">1</span>)][<span class="st">'gave'</span>]</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>ratio2 <span class="op">=</span> data[(data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>) <span class="op">&amp;</span> (data[<span class="st">'ratio'</span>] <span class="op">==</span> <span class="dv">2</span>)][<span class="st">'gave'</span>]</span>
@@ -1103,7 +1101,7 @@ These t-tests compare donation rates for each match ratio within the treatment g
 </section>
 <section id="regression-on-match-ratio-categorical" class="level3">
 <h3 class="anchored" data-anchor-id="regression-on-match-ratio-categorical">Regression on Match Ratio (Categorical)</h3>
-<div id="8b9b60b2" class="cell" data-execution_count="9">
+<div id="8364d7b7" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for treatment group and valid match ratios</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>match_data <span class="op">=</span> data[(data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>) <span class="op">&amp;</span> (data[<span class="st">'ratio'</span>].isin([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]))].copy()</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1143,7 +1141,7 @@ These t-tests compare donation rates for each match ratio within the treatment g
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">Time:</td>
-<td>20:50:28</td>
+<td>20:53:48</td>
 <td data-quarto-table-cell-role="th">Log-Likelihood:</td>
 <td>16688.</td>
 </tr>
@@ -1259,7 +1257,7 @@ The regression estimates donation rates for each match ratio using the 1:1 match
 <hr>
 <section id="response-rate-differences-from-raw-data-and-model" class="level4">
 <h4 class="anchored" data-anchor-id="response-rate-differences-from-raw-data-and-model">Response Rate Differences from Raw Data and Model</h4>
-<div id="8e936072" class="cell" data-execution_count="10">
+<div id="d58fda79" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Group-level mean donation rates</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>ratio1 <span class="op">=</span> data[(data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>) <span class="op">&amp;</span> (data[<span class="st">'ratio'</span>] <span class="op">==</span> <span class="dv">1</span>)][<span class="st">'gave'</span>]</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>ratio2 <span class="op">=</span> data[(data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>) <span class="op">&amp;</span> (data[<span class="st">'ratio'</span>] <span class="op">==</span> <span class="dv">2</span>)][<span class="st">'gave'</span>]</span>
@@ -1284,7 +1282,7 @@ Response Rate 3:1 = 0.0227
 3:1 - 2:1 = 0.0001</code></pre>
 </div>
 </div>
-<div id="3801cba5" class="cell" data-execution_count="11">
+<div id="e7f686f9" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model-based differences from regression coefficients</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>coef <span class="op">=</span> model.params</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1320,7 +1318,7 @@ Both the raw response rate differences and the model-based regression estimates 
 <p>In this subsection, I analyze the effect of the size of matched donation on the size of the charitable contribution.</p>
 <section id="full-sample-regression-includes-non-donors" class="level4">
 <h4 class="anchored" data-anchor-id="full-sample-regression-includes-non-donors">Full Sample Regression (Includes Non-Donors)</h4>
-<div id="1755d8f1" class="cell" data-execution_count="12">
+<div id="8f555085" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># OLS regression on full sample</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>model_full <span class="op">=</span> smf.ols(<span class="st">"amount ~ treatment"</span>, data<span class="op">=</span>data).fit()</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>model_full.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1354,7 +1352,7 @@ Both the raw response rate differences and the model-based regression estimates 
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">Time:</td>
-<td>20:50:28</td>
+<td>20:53:48</td>
 <td data-quarto-table-cell-role="th">Log-Likelihood:</td>
 <td>-1.7946e+05</td>
 </tr>
@@ -1453,7 +1451,7 @@ Both the raw response rate differences and the model-based regression estimates 
 </section>
 <section id="conditional-on-donation-only" class="level4">
 <h4 class="anchored" data-anchor-id="conditional-on-donation-only">Conditional on Donation Only</h4>
-<div id="69722a32" class="cell" data-execution_count="13">
+<div id="b78518ac" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter to only those who gave a donation</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>donors <span class="op">=</span> data[data[<span class="st">'gave'</span>] <span class="op">==</span> <span class="dv">1</span>]</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1490,7 +1488,7 @@ Both the raw response rate differences and the model-based regression estimates 
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">Time:</td>
-<td>20:50:28</td>
+<td>20:53:48</td>
 <td data-quarto-table-cell-role="th">Log-Likelihood:</td>
 <td>-5326.8</td>
 </tr>
@@ -1589,7 +1587,7 @@ Both the raw response rate differences and the model-based regression estimates 
 </section>
 <section id="histogram-of-donation-amounts-treatment-group" class="level4">
 <h4 class="anchored" data-anchor-id="histogram-of-donation-amounts-treatment-group">Histogram of Donation Amounts: Treatment Group</h4>
-<div id="4ec72e9c" class="cell" data-execution_count="14">
+<div id="877f2acb" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>sns.histplot(donors[donors[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>][<span class="st">'amount'</span>], bins<span class="op">=</span><span class="dv">30</span>)</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>plt.axvline(donors[donors[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>][<span class="st">'amount'</span>].mean(), color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'Mean'</span>)</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Donation Amounts – Treatment Group"</span>)</span>
@@ -1607,7 +1605,7 @@ Both the raw response rate differences and the model-based regression estimates 
 </section>
 <section id="histogram-of-donation-amounts-control-group" class="level4">
 <h4 class="anchored" data-anchor-id="histogram-of-donation-amounts-control-group">Histogram of Donation Amounts: Control Group</h4>
-<div id="a6668d1d" class="cell" data-execution_count="15">
+<div id="fd2e4d53" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>sns.histplot(donors[donors[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">0</span>][<span class="st">'amount'</span>], bins<span class="op">=</span><span class="dv">30</span>)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>plt.axvline(donors[donors[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">0</span>][<span class="st">'amount'</span>].mean(), color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'Mean'</span>)</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Donation Amounts – Control Group"</span>)</span>
@@ -1626,7 +1624,7 @@ Both the raw response rate differences and the model-based regression estimates 
 </section>
 </section>
 <section id="interpretation" class="level3">
-<h3 class="anchored" data-anchor-id="interpretation">📝 Interpretation</h3>
+<h3 class="anchored" data-anchor-id="interpretation">Interpretation</h3>
 <blockquote class="blockquote">
 <p>Interpretation:<br>
 In the regression using the full sample, we find that the treatment group donated $0.15 more on average than the control group. However, this result is not statistically significant (p = 0.063), meaning we cannot rule out that the difference is due to random chance.</p>
@@ -1644,12 +1642,9 @@ In the regression using the full sample, we find that the treatment group donate
 <p>Further suppose that the true distribution of respondents who do get a charitable donation match of any size is Bernoulli with probability p=0.022 that a donation is made.</p>
 <section id="law-of-large-numbers" class="level3">
 <h3 class="anchored" data-anchor-id="law-of-large-numbers">Law of Large Numbers</h3>
-</section>
-<section id="law-of-large-numbers-1" class="level3">
-<h3 class="anchored" data-anchor-id="law-of-large-numbers-1">Law of Large Numbers</h3>
 <p>We simulate two large samples: - One from the control group (donation probability = 0.018) - One from the treatment group (donation probability = 0.022)</p>
 <p>We calculate the difference between matched pairs, and then compute the cumulative average difference.</p>
-<div id="73269e15" class="cell" data-execution_count="16">
+<div id="44d828fe" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1686,39 +1681,43 @@ In the regression using the full sample, we find that the treatment group donate
 </section>
 <section id="interpretation-1" class="level3">
 <h3 class="anchored" data-anchor-id="interpretation-1">Interpretation</h3>
-<div class="sourceCode" id="cb25"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; **Interpretation**:</span>  </span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; The simulation demonstrates the **Law of Large Numbers**, which states that as the number of observations increases, the sample average converges to the population mean.</span>  </span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; </span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; In this plot, the cumulative average difference in donation rates between the treatment (p = 0.022) and control (p = 0.018) groups begins with wide fluctuations due to randomness in the early observations. However, as we simulate more and more matched pairs (up to 100,000), the cumulative difference stabilizes and converges to the true expected difference of **0.004**.</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; This reinforces a key idea in statistics: **with large enough sample sizes, the law of averages ensures reliable estimates of population parameters**. It also explains why Karlan and List were able to detect small treatment effects — because their experiment had tens of thousands of observations.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="central-limit-theorem" class="level3">
-<h3 class="anchored" data-anchor-id="central-limit-theorem">Central Limit Theorem</h3>
-<p>We simulate distributions of average differences in donation rates between control (p = 0.018) and treatment (p = 0.022) groups, using increasing sample sizes (n = 50, 200, 500, 1000). For each sample size, we repeat the process 1000 times and visualize the distribution of sample differences.</p>
-<div id="3c37a408" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_clt_sim(n, sims<span class="op">=</span><span class="dv">1000</span>, p_control<span class="op">=</span><span class="fl">0.018</span>, p_treat<span class="op">=</span><span class="fl">0.022</span>):</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    diffs <span class="op">=</span> []</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(sims):</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>        c <span class="op">=</span> np.random.binomial(<span class="dv">1</span>, p_control, n)</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>        t <span class="op">=</span> np.random.binomial(<span class="dv">1</span>, p_treat, n)</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>        diffs.append(np.mean(t) <span class="op">-</span> np.mean(c))</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> diffs</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample sizes to simulate</span></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>sample_sizes <span class="op">=</span> [<span class="dv">50</span>, <span class="dv">200</span>, <span class="dv">500</span>, <span class="dv">1000</span>]</span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">8</span>))</span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, n <span class="kw">in</span> <span class="bu">zip</span>(axes.flat, sample_sizes):</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    dist <span class="op">=</span> run_clt_sim(n)</span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    ax.hist(dist, bins<span class="op">=</span><span class="dv">30</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"Sample Size = </span><span class="sc">{</span>n<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    ax.axvline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'Zero'</span>)</span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>    ax.axvline(<span class="fl">0.004</span>, color<span class="op">=</span><span class="st">'green'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'True Difference'</span>)</span>
-<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>    ax.legend()</span>
-<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<blockquote class="blockquote">
+<p>The simulation demonstrates the <strong>Law of Large Numbers</strong>, which states that as the number of observations increases, the sample average converges to the population mean.</p>
+<p>In this plot, the cumulative average difference in donation rates between the treatment (p = 0.022) and control (p = 0.018) groups begins with wide fluctuations due to randomness in the early observations. However, as we simulate more and more matched pairs (up to 100,000), the cumulative difference stabilizes and converges to the true expected difference of <strong>0.004</strong>.</p>
+<p>This reinforces a key idea in statistics: <strong>with large enough sample sizes, the law of averages ensures reliable estimates of population parameters</strong>. It also explains why Karlan and List were able to detect small treatment effects — because their experiment had tens of thousands of observations.</p>
+</blockquote>
+<pre><code>
+
+
+### Central Limit Theorem
+
+
+We simulate distributions of average differences in donation rates between control (p = 0.018) and treatment (p = 0.022) groups, using increasing sample sizes (n = 50, 200, 500, 1000). For each sample size, we repeat the process 1000 times and visualize the distribution of sample differences.
+
+::: {#4931180a .cell execution_count=17}
+``` {.python .cell-code}
+def run_clt_sim(n, sims=1000, p_control=0.018, p_treat=0.022):
+    diffs = []
+    for _ in range(sims):
+        c = np.random.binomial(1, p_control, n)
+        t = np.random.binomial(1, p_treat, n)
+        diffs.append(np.mean(t) - np.mean(c))
+    return diffs
+
+# Sample sizes to simulate
+sample_sizes = [50, 200, 500, 1000]
+fig, axes = plt.subplots(2, 2, figsize=(12, 8))
+
+for ax, n in zip(axes.flat, sample_sizes):
+    dist = run_clt_sim(n)
+    ax.hist(dist, bins=30, edgecolor='black')
+    ax.set_title(f"Sample Size = {n}")
+    ax.axvline(0, color='red', linestyle='--', label='Zero')
+    ax.axvline(0.004, color='green', linestyle='--', label='True Difference')
+    ax.legend()
+
+plt.tight_layout()
+plt.show()</code></pre>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1726,14 +1725,13 @@ In the regression using the full sample, we find that the treatment group donate
 </figure>
 </div>
 </div>
-</div>
+<p>:::</p>
 <hr>
 </section>
 <section id="interpretation-2" class="level3">
 <h3 class="anchored" data-anchor-id="interpretation-2">Interpretation</h3>
 <blockquote class="blockquote">
-<p><strong>Interpretation</strong>:<br>
-These four histograms illustrate the <strong>Central Limit Theorem</strong> using simulated sample means of donation rate differences between the treatment (p = 0.022) and control (p = 0.018) groups.</p>
+<p>These four histograms illustrate the <strong>Central Limit Theorem</strong> using simulated sample means of donation rate differences between the treatment (p = 0.022) and control (p = 0.018) groups.</p>
 <p>As the sample size increases: - With <strong>n = 50</strong>, the distribution is wide and noisy — there’s considerable variation, and the true mean difference (0.004) is not clearly distinguishable from zero. - At <strong>n = 200</strong>, the distribution begins to resemble a bell curve, and the true difference is more centered. - At <strong>n = 500</strong>, the histogram tightens noticeably, and zero begins to lie closer to the tail of the distribution. - By <strong>n = 1000</strong>, the sample mean differences are tightly clustered around 0.004, and <strong>zero is clearly no longer at the center</strong> — it lies in the tail, suggesting strong evidence against the null of no effect.</p>
 <p>This simulation confirms that <strong>larger samples reduce sampling variability</strong> and make it easier to detect small, true differences — exactly what Karlan and List leveraged with their large-scale experiment.</p>
 </blockquote>

@@ -352,7 +352,7 @@ plt.show()
 
 ---
 
-### 📝 Interpretation
+###  Interpretation
 
 > Interpretation:  
 > In the regression using the full sample, we find that the treatment group donated $0.15 more on average than the control group. However, this result is not statistically significant (p = 0.063), meaning we cannot rule out that the difference is due to random chance.  
@@ -375,8 +375,6 @@ As a reminder of how the t-statistic "works," in this section I use simulation t
 Suppose the true distribution of respondents who do not get a charitable donation match is Bernoulli with probability p=0.018 that a donation is made. 
 
 Further suppose that the true distribution of respondents who do get a charitable donation match of any size  is Bernoulli with probability p=0.022 that a donation is made.
-
-### Law of Large Numbers
 
 ### Law of Large Numbers
 
@@ -416,9 +414,7 @@ plt.show()
 ---
 
 ###  Interpretation
-
-```markdown
-> **Interpretation**:  
+ 
 > The simulation demonstrates the **Law of Large Numbers**, which states that as the number of observations increases, the sample average converges to the population mean.  
 > 
 > In this plot, the cumulative average difference in donation rates between the treatment (p = 0.022) and control (p = 0.018) groups begins with wide fluctuations due to randomness in the early observations. However, as we simulate more and more matched pairs (up to 100,000), the cumulative difference stabilizes and converges to the true expected difference of **0.004**.
@@ -461,8 +457,7 @@ plt.show()
 ---
 
 ###  Interpretation
-
-> **Interpretation**:  
+ 
 > These four histograms illustrate the **Central Limit Theorem** using simulated sample means of donation rate differences between the treatment (p = 0.022) and control (p = 0.018) groups.  
 > 
 > As the sample size increases:
