@@ -103,7 +103,7 @@ data = pd.read_stata("/Users/hanhuazhu/Downloads/karlan_list_2007 (2).dta")
 #| warning: false
 
 # Overview of data structure and sample records
-data.info()
+
 data.describe().T
 
 ```
@@ -457,7 +457,6 @@ plt.show()
 
 ###  Interpretation
 
-> Interpretation:  
 > In the regression using the full sample, we find that the treatment group donated $0.15 more on average than the control group. However, this result is not statistically significant (p = 0.063), meaning we cannot rule out that the difference is due to random chance.  
 > 
 > In the donor-only regression, we isolate just the people who made a donation and ask: do those in the treatment group give more than those in the control? Here, the treatment coefficient is -1.67, again not statistically significant (p = 0.561). In fact, the sign of the effect is slightly negative.
