@@ -9,7 +9,7 @@ callout-appearance: minimal # this hides the blue "i" icon on .callout-notes
 ## Introduction
 Dean Karlan at Yale and John List at the University of Chicago conducted a large-scale natural field experiment to test the effectiveness of different fundraising strategies. They sent out over 50,000 fundraising letters to prior donors of a nonprofit organization, randomly assigning recipients to one of several treatment groups.
 
-The experiment tested whether the presence of a **matching donation offer** (e.g., for every $1 donated, the organization receives $2, $3, or $4 total depending on the match ratio) would increase both the **likelihood of giving** and the **amount donated**. The matching ratios varied between 1:1, 2:1, and 3:1. In addition, the letters varied the **maximum match amount** (e.g., $25,000, $50,000, or $100,000) and the **suggested donation amount**, which was calculated based on each recipient’s highest prior donation.
+The experiment tested whether the presence of a matching donation offer (e.g., for every $1 donated, the organization receives $2, $3, or $4 total depending on the match ratio) would increase both the likelihood of giving and the amount donated. The matching ratios varied between 1:1, 2:1, and 3:1. In addition, the letters varied the maximum match amount (e.g., $25,000, $50,000, or $100,000) and the suggested donation amount, which was calculated based on each recipient’s highest prior donation.
 
 Recipients were randomly assigned to treatment groups, making this a clean experimental design for causal inference. The primary outcomes were whether someone donated and how much they gave. These results help inform how nonprofits can design more effective fundraising campaigns.
 
@@ -106,30 +106,53 @@ data.head()
 
 As an ad hoc test of the randomization mechanism, I provide a series of tests that compare aspects of the treatment and control groups to assess whether they are statistically significantly different from one another.
 
-We test whether months since last donation (`mrm2`) differ between treatment and control groups using both a t-test and a linear regression.
+To assess whether the treatment was randomly assigned, I examine five pre-treatment covariates unrelated to the outcome: `years` (years since first donation), `female` (gender indicator), `couple` (marital status), `median_hhincome` (median household income by zip code), and `page18_39` (proportion aged 18–39 in the zip code). These are useful for balance testing because they should not be affected by treatment assignment and reflect characteristics likely observed before the intervention.
 
-```{python}
-# T-test for mrm2
-treat = data[data['treatment'] == 1]['mrm2'].dropna()
-control = data[data['treatment'] == 0]['mrm2'].dropna()
+For each variable, I conduct:
 
-t_stat, p_val = stats.ttest_ind(treat, control, equal_var=False)
-print(f"T-test result for mrm2:\nT-statistic: {t_stat:.3f}, p-value: {p_val:.3f}")
-```
+1. A **manual t-test**, calculated using the following formula:
 
-```{python}
-# OLS regression: mrm2 ~ treatment
-model = smf.ols("mrm2 ~ treatment", data=data).fit()
-model.summary()
-```
+$$
+t = \frac{\bar{X}_{\text{treatment}} - \bar{X}_{\text{control}}}{\sqrt{\frac{s^2_{\text{treatment}}}{n_{\text{treatment}}} + \frac{s^2_{\text{control}}}{n_{\text{control}}}}}
+$$
 
-> **Interpretation**: Both the t-test and linear regression for `mrm2` (months since last donation) show **no statistically significant difference** between treatment and control groups.
+2. A **linear regression**, where the covariate is regressed on the treatment indicator:
 
-- The t-test gave a **p-value of 0.905**, indicating no meaningful difference.
-- The OLS regression estimated the treatment effect at **0.0137**, also with a **p-value of 0.905**.
+$$
+\text{covariate}_i = \alpha + \beta \cdot \text{treatment}_i + \varepsilon_i
+$$
 
-These results confirm the success of the randomization: the treatment and control groups are statistically similar in terms of prior donation behavior. This supports the internal validity of the experiment and aligns with the purpose of Table 1 in Karlan and List (2007), which shows balance across multiple variables to reassure readers that observed treatment effects are not confounded by pre-existing group differences.
+The coefficient $\beta$ captures the estimated difference in means between groups.
 
+---
+
+### Manual T-Test Results
+
+- `years`: The t-statistic was **-1.091**, indicating no significant difference.
+- `female`: The t-statistic was **-1.754**, just below conventional significance.
+- `couple`: The t-statistic was **-0.582**, suggesting no group difference in relationship status.
+- `median_hhincome`: The t-statistic was **-0.743**, showing no income-based imbalance.
+- `page18_39`: The t-statistic was **-0.124**, indicating age composition is well balanced.
+
+---
+
+### Linear Regression Results
+
+Each covariate was also regressed on the treatment variable:
+
+- `years`: Coefficient = **-0.058**, p = **0.270**
+- `female`: Coefficient = **-0.008**, p = **0.079**
+- `couple`: Coefficient = **-0.002**, p = **0.559**
+- `median_hhincome`: Coefficient = **-157.925**, p = **0.458**
+- `page18_39`: Coefficient = **~0.000**, p = **0.901**
+
+---
+
+### Interpretation
+
+Across all covariates, both the t-tests and linear regressions provide consistent evidence of **no statistically significant differences** between the treatment and control groups. The estimated coefficients are small, and all p-values exceed 0.05, supporting the assumption of balance under random assignment.
+
+These results replicate the purpose of **Table 1 in Karlan and List (2007)**, which provides confidence that the estimated treatment effects are not confounded by observable pre-treatment characteristics.
 
 
 ## Experimental Results
@@ -141,15 +164,19 @@ First, I analyze whether matched donations lead to an increased response rate of
 ### Charitable Contribution Made
 
 We examine whether the treatment group had a higher donation rate compared to the control group.
-
 ```{python}
-# Barplot of donation rate by treatment
-sns.barplot(data=data, x="treatment", y="gave", ci=None)
+#| echo: false
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+sns.barplot(data=data, x="treatment", y="gave", errorbar=None)
 plt.xticks([0, 1], ["Control", "Treatment"])
 plt.ylabel("Proportion Donated")
 plt.title("Donation Rate by Treatment Group")
 plt.show()
 ```
+
 
 ```{python}
 # T-test on binary outcome (gave)
@@ -296,12 +323,11 @@ print(f"3:1 - 2:1 = {coef['C(ratio)[T.3]'] - coef['C(ratio)[T.2]']:.4f}")
 
 ---
 
-###  Summary
+### Summary
 
-```markdown
-> **Conclusion**:  
-> Neither the t-tests nor the regression provide strong evidence that increasing the match ratio from 1:1 to 2:1 or 3:1 significantly increases the donation response rate. The estimated differences are small and statistically insignificant. These findings replicate Karlan and List’s claim on page 8 that “larger match ratios do not provide additional lift,” and suggest that announcing any match offer may be sufficient to nudge donation behavior — but increasing the ratio adds little extra power.
-```
+::: {.callout-note title="Conclusion"}
+Neither the t-tests nor the regression provide strong evidence that increasing the match ratio from 1:1 to 2:1 or 3:1 significantly increases the donation response rate. The estimated differences are small and statistically insignificant. These findings replicate Karlan and List’s claim on page 8 that “larger match ratios do not provide additional lift,” and suggest that announcing any match offer may be sufficient to nudge donation behavior — but increasing the ratio adds little extra power.
+:::
 
 
 
@@ -331,6 +357,8 @@ model_donors.summary()
 #### Histogram of Donation Amounts: Treatment Group
 
 ```{python}
+#| echo: false
+
 sns.histplot(donors[donors['treatment'] == 1]['amount'], bins=30)
 plt.axvline(donors[donors['treatment'] == 1]['amount'].mean(), color='red', linestyle='--', label='Mean')
 plt.title("Donation Amounts – Treatment Group")
@@ -339,9 +367,14 @@ plt.legend()
 plt.show()
 ```
 
+
 #### Histogram of Donation Amounts: Control Group
 
 ```{python}
+#| echo: false
+#| warning: false
+#| message: false
+
 sns.histplot(donors[donors['treatment'] == 0]['amount'], bins=30)
 plt.axvline(donors[donors['treatment'] == 0]['amount'].mean(), color='red', linestyle='--', label='Mean')
 plt.title("Donation Amounts – Control Group")
@@ -349,6 +382,7 @@ plt.xlabel("Amount")
 plt.legend()
 plt.show()
 ```
+
 
 ---
 
@@ -385,31 +419,45 @@ We simulate two large samples:
 We calculate the difference between matched pairs, and then compute the cumulative average difference.
 
 ```{python}
+#| echo: false
+#| warning: false
+#| message: false
+
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 
 # Set seed for reproducibility
 np.random.seed(42)
 
-# Simulate Bernoulli draws
-control_draws = np.random.binomial(1, 0.018, 100_000)
-treat_draws = np.random.binomial(1, 0.022, 100_000)
+# Extract 'gave' values for treatment and control groups
+control_gave = data[data['treatment'] == 0]['gave'].values
+treat_gave = data[data['treatment'] == 1]['gave'].values
 
-# Compute differences and cumulative average
-diffs = treat_draws - control_draws
+# Randomly draw 10,000 samples with replacement from each group
+control_sample = np.random.choice(control_gave, size=10_000, replace=True)
+treat_sample = np.random.choice(treat_gave, size=10_000, replace=True)
+
+# Compute difference in each draw (treatment - control)
+diffs = treat_sample - control_sample  # values in {-1, 0, 1}
+
+# Compute cumulative average of differences
 cum_avg = np.cumsum(diffs) / np.arange(1, len(diffs) + 1)
 
 # Plot
 plt.figure(figsize=(10, 5))
 plt.plot(cum_avg, label="Cumulative Avg. Difference")
-plt.axhline(y=0.004, color='red', linestyle='--', label="True Mean Difference (0.004)")
-plt.title("Law of Large Numbers Simulation")
+plt.axhline(np.mean(treat_gave) - np.mean(control_gave), color='red', linestyle='--',
+            label=f"True Mean Difference ({np.mean(treat_gave) - np.mean(control_gave):.3f})")
+plt.title("Cumulative Average of Treatment vs Control (from real data)")
 plt.xlabel("Number of Observations")
 plt.ylabel("Cumulative Average Difference")
 plt.legend()
 plt.grid(True)
 plt.show()
+
 ```
+
 
 ---
 
@@ -430,6 +478,10 @@ plt.show()
 We simulate distributions of average differences in donation rates between control (p = 0.018) and treatment (p = 0.022) groups, using increasing sample sizes (n = 50, 200, 500, 1000). For each sample size, we repeat the process 1000 times and visualize the distribution of sample differences.
 
 ```{python}
+#| echo: false
+#| warning: false
+#| message: false
+
 def run_clt_sim(n, sims=1000, p_control=0.018, p_treat=0.022):
     diffs = []
     for _ in range(sims):
@@ -453,6 +505,7 @@ for ax, n in zip(axes.flat, sample_sizes):
 plt.tight_layout()
 plt.show()
 ```
+
 
 ---
 
