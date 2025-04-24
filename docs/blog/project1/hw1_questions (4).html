@@ -205,15 +205,22 @@ window.Quarto = {
   <li><a href="#t-tests-for-match-ratios" id="toc-t-tests-for-match-ratios" class="nav-link" data-scroll-target="#t-tests-for-match-ratios">T-tests for Match Ratios</a></li>
   <li><a href="#regression-on-match-ratio-categorical" id="toc-regression-on-match-ratio-categorical" class="nav-link" data-scroll-target="#regression-on-match-ratio-categorical">Regression on Match Ratio (Categorical)</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
-  <li><a href="#size-of-charitable-contribution" id="toc-size-of-charitable-contribution" class="nav-link" data-scroll-target="#size-of-charitable-contribution">Size of Charitable Contribution</a></li>
+  </ul></li>
+  <li><a href="#size-of-charitable-contribution" id="toc-size-of-charitable-contribution" class="nav-link" data-scroll-target="#size-of-charitable-contribution">Size of Charitable Contribution</a>
+  <ul class="collapse">
+  <li><a href="#full-sample-regression" id="toc-full-sample-regression" class="nav-link" data-scroll-target="#full-sample-regression">Full Sample Regression</a></li>
+  <li><a href="#regression-among-donors-only" id="toc-regression-among-donors-only" class="nav-link" data-scroll-target="#regression-among-donors-only">Regression Among Donors Only</a></li>
   <li><a href="#interpretation-1" id="toc-interpretation-1" class="nav-link" data-scroll-target="#interpretation-1">Interpretation</a></li>
+  <li><a href="#interpretation-2" id="toc-interpretation-2" class="nav-link" data-scroll-target="#interpretation-2">Interpretation</a></li>
   </ul></li>
   <li><a href="#simulation-experiment" id="toc-simulation-experiment" class="nav-link" data-scroll-target="#simulation-experiment">Simulation Experiment</a>
   <ul class="collapse">
   <li><a href="#law-of-large-numbers" id="toc-law-of-large-numbers" class="nav-link" data-scroll-target="#law-of-large-numbers">Law of Large Numbers</a></li>
-  <li><a href="#interpretation-2" id="toc-interpretation-2" class="nav-link" data-scroll-target="#interpretation-2">Interpretation</a></li>
-  <li><a href="#central-limit-theorem" id="toc-central-limit-theorem" class="nav-link" data-scroll-target="#central-limit-theorem">Central Limit Theorem</a></li>
+  <li><a href="#law-of-large-numbers-1" id="toc-law-of-large-numbers-1" class="nav-link" data-scroll-target="#law-of-large-numbers-1">Law of Large Numbers</a></li>
+  <li><a href="#law-of-large-numbers-2" id="toc-law-of-large-numbers-2" class="nav-link" data-scroll-target="#law-of-large-numbers-2">Law of Large Numbers</a></li>
   <li><a href="#interpretation-3" id="toc-interpretation-3" class="nav-link" data-scroll-target="#interpretation-3">Interpretation</a></li>
+  <li><a href="#central-limit-theorem" id="toc-central-limit-theorem" class="nav-link" data-scroll-target="#central-limit-theorem">Central Limit Theorem</a></li>
+  <li><a href="#interpretation-4" id="toc-interpretation-4" class="nav-link" data-scroll-target="#interpretation-4">Interpretation</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -265,177 +272,6 @@ window.Quarto = {
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
 <p>We load and explore the dataset from Karlan and List (2007).</p>
-<div id="cc58229c" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_stata(<span class="st">"/Users/hanhuazhu/Downloads/karlan_list_2007 (2).dta"</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Preview first few rows</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>data.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">treatment</th>
-<th data-quarto-table-cell-role="th">control</th>
-<th data-quarto-table-cell-role="th">ratio</th>
-<th data-quarto-table-cell-role="th">ratio2</th>
-<th data-quarto-table-cell-role="th">ratio3</th>
-<th data-quarto-table-cell-role="th">size</th>
-<th data-quarto-table-cell-role="th">size25</th>
-<th data-quarto-table-cell-role="th">size50</th>
-<th data-quarto-table-cell-role="th">size100</th>
-<th data-quarto-table-cell-role="th">sizeno</th>
-<th data-quarto-table-cell-role="th">...</th>
-<th data-quarto-table-cell-role="th">redcty</th>
-<th data-quarto-table-cell-role="th">bluecty</th>
-<th data-quarto-table-cell-role="th">pwhite</th>
-<th data-quarto-table-cell-role="th">pblack</th>
-<th data-quarto-table-cell-role="th">page18_39</th>
-<th data-quarto-table-cell-role="th">ave_hh_sz</th>
-<th data-quarto-table-cell-role="th">median_hhincome</th>
-<th data-quarto-table-cell-role="th">powner</th>
-<th data-quarto-table-cell-role="th">psch_atlstba</th>
-<th data-quarto-table-cell-role="th">pop_propurban</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>0</td>
-<td>1</td>
-<td>Control</td>
-<td>0</td>
-<td>0</td>
-<td>Control</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>...</td>
-<td>0.0</td>
-<td>1.0</td>
-<td>0.446493</td>
-<td>0.527769</td>
-<td>0.317591</td>
-<td>2.10</td>
-<td>28517.0</td>
-<td>0.499807</td>
-<td>0.324528</td>
-<td>1.0</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>0</td>
-<td>1</td>
-<td>Control</td>
-<td>0</td>
-<td>0</td>
-<td>Control</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>...</td>
-<td>1.0</td>
-<td>0.0</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>1</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>$100,000</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>...</td>
-<td>0.0</td>
-<td>1.0</td>
-<td>0.935706</td>
-<td>0.011948</td>
-<td>0.276128</td>
-<td>2.48</td>
-<td>51175.0</td>
-<td>0.721941</td>
-<td>0.192668</td>
-<td>1.0</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>1</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>Unstated</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>...</td>
-<td>1.0</td>
-<td>0.0</td>
-<td>0.888331</td>
-<td>0.010760</td>
-<td>0.279412</td>
-<td>2.65</td>
-<td>79269.0</td>
-<td>0.920431</td>
-<td>0.412142</td>
-<td>1.0</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>1</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>$50,000</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>...</td>
-<td>0.0</td>
-<td>1.0</td>
-<td>0.759014</td>
-<td>0.127421</td>
-<td>0.442389</td>
-<td>1.85</td>
-<td>40908.0</td>
-<td>0.416072</td>
-<td>0.439965</td>
-<td>1.0</td>
-</tr>
-</tbody>
-</table>
-
-<p>5 rows × 51 columns</p>
-</div>
-</div>
-</div>
 <p>#:::: {.callout-note collapse=“true”}</p>
 <table class="caption-top table">
 <colgroup>
@@ -655,6 +491,852 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
+<div id="930030e7" class="cell" data-message="false" data-execution_count="2">
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 50083 entries, 0 to 50082
+Data columns (total 51 columns):
+ #   Column              Non-Null Count  Dtype   
+---  ------              --------------  -----   
+ 0   treatment           50083 non-null  int8    
+ 1   control             50083 non-null  int8    
+ 2   ratio               50083 non-null  category
+ 3   ratio2              50083 non-null  int8    
+ 4   ratio3              50083 non-null  int8    
+ 5   size                50083 non-null  category
+ 6   size25              50083 non-null  int8    
+ 7   size50              50083 non-null  int8    
+ 8   size100             50083 non-null  int8    
+ 9   sizeno              50083 non-null  int8    
+ 10  ask                 50083 non-null  category
+ 11  askd1               50083 non-null  int8    
+ 12  askd2               50083 non-null  int8    
+ 13  askd3               50083 non-null  int8    
+ 14  ask1                50083 non-null  int16   
+ 15  ask2                50083 non-null  int16   
+ 16  ask3                50083 non-null  int16   
+ 17  amount              50083 non-null  float32 
+ 18  gave                50083 non-null  int8    
+ 19  amountchange        50083 non-null  float32 
+ 20  hpa                 50083 non-null  float32 
+ 21  ltmedmra            50083 non-null  int8    
+ 22  freq                50083 non-null  int16   
+ 23  years               50082 non-null  float64 
+ 24  year5               50083 non-null  int8    
+ 25  mrm2                50082 non-null  float64 
+ 26  dormant             50083 non-null  int8    
+ 27  female              48972 non-null  float64 
+ 28  couple              48935 non-null  float64 
+ 29  state50one          50083 non-null  int8    
+ 30  nonlit              49631 non-null  float64 
+ 31  cases               49631 non-null  float64 
+ 32  statecnt            50083 non-null  float32 
+ 33  stateresponse       50083 non-null  float32 
+ 34  stateresponset      50083 non-null  float32 
+ 35  stateresponsec      50080 non-null  float32 
+ 36  stateresponsetminc  50080 non-null  float32 
+ 37  perbush             50048 non-null  float32 
+ 38  close25             50048 non-null  float64 
+ 39  red0                50048 non-null  float64 
+ 40  blue0               50048 non-null  float64 
+ 41  redcty              49978 non-null  float64 
+ 42  bluecty             49978 non-null  float64 
+ 43  pwhite              48217 non-null  float32 
+ 44  pblack              48047 non-null  float32 
+ 45  page18_39           48217 non-null  float32 
+ 46  ave_hh_sz           48221 non-null  float32 
+ 47  median_hhincome     48209 non-null  float64 
+ 48  powner              48214 non-null  float32 
+ 49  psch_atlstba        48215 non-null  float32 
+ 50  pop_propurban       48217 non-null  float32 
+dtypes: category(3), float32(16), float64(12), int16(4), int8(16)
+memory usage: 8.9 MB</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">count</th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">std</th>
+<th data-quarto-table-cell-role="th">min</th>
+<th data-quarto-table-cell-role="th">25%</th>
+<th data-quarto-table-cell-role="th">50%</th>
+<th data-quarto-table-cell-role="th">75%</th>
+<th data-quarto-table-cell-role="th">max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">treatment</td>
+<td>50083.0</td>
+<td>0.666813</td>
+<td>0.471357</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">control</td>
+<td>50083.0</td>
+<td>0.333187</td>
+<td>0.471357</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">ratio2</td>
+<td>50083.0</td>
+<td>0.222311</td>
+<td>0.415803</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">ratio3</td>
+<td>50083.0</td>
+<td>0.222211</td>
+<td>0.415736</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">size25</td>
+<td>50083.0</td>
+<td>0.166723</td>
+<td>0.372732</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">size50</td>
+<td>50083.0</td>
+<td>0.166623</td>
+<td>0.372643</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">size100</td>
+<td>50083.0</td>
+<td>0.166723</td>
+<td>0.372732</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">sizeno</td>
+<td>50083.0</td>
+<td>0.166743</td>
+<td>0.372750</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">askd1</td>
+<td>50083.0</td>
+<td>0.222311</td>
+<td>0.415803</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">askd2</td>
+<td>50083.0</td>
+<td>0.222291</td>
+<td>0.415790</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">askd3</td>
+<td>50083.0</td>
+<td>0.222211</td>
+<td>0.415736</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">ask1</td>
+<td>50083.0</td>
+<td>71.501807</td>
+<td>101.728936</td>
+<td>25.000000</td>
+<td>35.000000</td>
+<td>45.000000</td>
+<td>65.000000</td>
+<td>1500.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">ask2</td>
+<td>50083.0</td>
+<td>91.792724</td>
+<td>127.252628</td>
+<td>35.000000</td>
+<td>45.000000</td>
+<td>60.000000</td>
+<td>85.000000</td>
+<td>1875.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">ask3</td>
+<td>50083.0</td>
+<td>111.046263</td>
+<td>151.673562</td>
+<td>50.000000</td>
+<td>55.000000</td>
+<td>70.000000</td>
+<td>100.000000</td>
+<td>2250.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">amount</td>
+<td>50083.0</td>
+<td>0.915694</td>
+<td>8.707393</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>400.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">gave</td>
+<td>50083.0</td>
+<td>0.020646</td>
+<td>0.142197</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">amountchange</td>
+<td>50083.0</td>
+<td>-52.672016</td>
+<td>1267.097778</td>
+<td>-200412.125000</td>
+<td>-50.000000</td>
+<td>-30.000000</td>
+<td>-25.000000</td>
+<td>275.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">hpa</td>
+<td>50083.0</td>
+<td>59.384975</td>
+<td>71.179871</td>
+<td>0.000000</td>
+<td>30.000000</td>
+<td>45.000000</td>
+<td>60.000000</td>
+<td>1000.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">ltmedmra</td>
+<td>50083.0</td>
+<td>0.493720</td>
+<td>0.499966</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">freq</td>
+<td>50083.0</td>
+<td>8.039355</td>
+<td>11.394454</td>
+<td>0.000000</td>
+<td>2.000000</td>
+<td>4.000000</td>
+<td>10.000000</td>
+<td>218.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">years</td>
+<td>50082.0</td>
+<td>6.097540</td>
+<td>5.503492</td>
+<td>0.000000</td>
+<td>2.000000</td>
+<td>5.000000</td>
+<td>9.000000</td>
+<td>95.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">year5</td>
+<td>50083.0</td>
+<td>0.508815</td>
+<td>0.499927</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">mrm2</td>
+<td>50082.0</td>
+<td>13.007268</td>
+<td>12.081403</td>
+<td>0.000000</td>
+<td>4.000000</td>
+<td>8.000000</td>
+<td>19.000000</td>
+<td>168.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">dormant</td>
+<td>50083.0</td>
+<td>0.523471</td>
+<td>0.499454</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">female</td>
+<td>48972.0</td>
+<td>0.277669</td>
+<td>0.447854</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">couple</td>
+<td>48935.0</td>
+<td>0.091897</td>
+<td>0.288884</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">state50one</td>
+<td>50083.0</td>
+<td>0.000998</td>
+<td>0.031581</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">nonlit</td>
+<td>49631.0</td>
+<td>2.473918</td>
+<td>1.961528</td>
+<td>0.000000</td>
+<td>1.000000</td>
+<td>3.000000</td>
+<td>4.000000</td>
+<td>6.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">cases</td>
+<td>49631.0</td>
+<td>1.499768</td>
+<td>1.155140</td>
+<td>0.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>2.000000</td>
+<td>4.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">statecnt</td>
+<td>50083.0</td>
+<td>5.998820</td>
+<td>5.745993</td>
+<td>0.001995</td>
+<td>1.833234</td>
+<td>3.538799</td>
+<td>9.607021</td>
+<td>17.368841</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">stateresponse</td>
+<td>50083.0</td>
+<td>0.020627</td>
+<td>0.005171</td>
+<td>0.000000</td>
+<td>0.018163</td>
+<td>0.019710</td>
+<td>0.023048</td>
+<td>0.076923</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">stateresponset</td>
+<td>50083.0</td>
+<td>0.021989</td>
+<td>0.006257</td>
+<td>0.000000</td>
+<td>0.018493</td>
+<td>0.021697</td>
+<td>0.024703</td>
+<td>0.111111</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">stateresponsec</td>
+<td>50080.0</td>
+<td>0.017717</td>
+<td>0.007516</td>
+<td>0.000000</td>
+<td>0.012862</td>
+<td>0.019881</td>
+<td>0.020806</td>
+<td>0.052632</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">stateresponsetminc</td>
+<td>50080.0</td>
+<td>0.004273</td>
+<td>0.009112</td>
+<td>-0.047619</td>
+<td>-0.001388</td>
+<td>0.001779</td>
+<td>0.010545</td>
+<td>0.111111</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">perbush</td>
+<td>50048.0</td>
+<td>0.487940</td>
+<td>0.078733</td>
+<td>0.090909</td>
+<td>0.444444</td>
+<td>0.484848</td>
+<td>0.525253</td>
+<td>0.731959</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">close25</td>
+<td>50048.0</td>
+<td>0.185702</td>
+<td>0.388870</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">red0</td>
+<td>50048.0</td>
+<td>0.404452</td>
+<td>0.490791</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">blue0</td>
+<td>50048.0</td>
+<td>0.595548</td>
+<td>0.490791</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">redcty</td>
+<td>49978.0</td>
+<td>0.510245</td>
+<td>0.499900</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">bluecty</td>
+<td>49978.0</td>
+<td>0.488715</td>
+<td>0.499878</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">pwhite</td>
+<td>48217.0</td>
+<td>0.819599</td>
+<td>0.168560</td>
+<td>0.009418</td>
+<td>0.755845</td>
+<td>0.872797</td>
+<td>0.938827</td>
+<td>1.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">pblack</td>
+<td>48047.0</td>
+<td>0.086710</td>
+<td>0.135868</td>
+<td>0.000000</td>
+<td>0.014729</td>
+<td>0.036554</td>
+<td>0.090882</td>
+<td>0.989622</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">page18_39</td>
+<td>48217.0</td>
+<td>0.321694</td>
+<td>0.103039</td>
+<td>0.000000</td>
+<td>0.258311</td>
+<td>0.305534</td>
+<td>0.369132</td>
+<td>0.997544</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">ave_hh_sz</td>
+<td>48221.0</td>
+<td>2.429012</td>
+<td>0.378105</td>
+<td>0.000000</td>
+<td>2.210000</td>
+<td>2.440000</td>
+<td>2.660000</td>
+<td>5.270000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">median_hhincome</td>
+<td>48209.0</td>
+<td>54815.700533</td>
+<td>22027.316665</td>
+<td>5000.000000</td>
+<td>39181.000000</td>
+<td>50673.000000</td>
+<td>66005.000000</td>
+<td>200001.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">powner</td>
+<td>48214.0</td>
+<td>0.669418</td>
+<td>0.193405</td>
+<td>0.000000</td>
+<td>0.560222</td>
+<td>0.712296</td>
+<td>0.816798</td>
+<td>1.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">psch_atlstba</td>
+<td>48215.0</td>
+<td>0.391661</td>
+<td>0.186599</td>
+<td>0.000000</td>
+<td>0.235647</td>
+<td>0.373744</td>
+<td>0.530036</td>
+<td>1.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">pop_propurban</td>
+<td>48217.0</td>
+<td>0.871968</td>
+<td>0.258633</td>
+<td>0.000000</td>
+<td>0.884929</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="9613f72a" class="cell" data-message="false" data-execution_count="3">
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">treatment</th>
+<th data-quarto-table-cell-role="th">control</th>
+<th data-quarto-table-cell-role="th">ratio2</th>
+<th data-quarto-table-cell-role="th">ratio3</th>
+<th data-quarto-table-cell-role="th">size25</th>
+<th data-quarto-table-cell-role="th">size50</th>
+<th data-quarto-table-cell-role="th">size100</th>
+<th data-quarto-table-cell-role="th">sizeno</th>
+<th data-quarto-table-cell-role="th">askd1</th>
+<th data-quarto-table-cell-role="th">askd2</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">redcty</th>
+<th data-quarto-table-cell-role="th">bluecty</th>
+<th data-quarto-table-cell-role="th">pwhite</th>
+<th data-quarto-table-cell-role="th">pblack</th>
+<th data-quarto-table-cell-role="th">page18_39</th>
+<th data-quarto-table-cell-role="th">ave_hh_sz</th>
+<th data-quarto-table-cell-role="th">median_hhincome</th>
+<th data-quarto-table-cell-role="th">powner</th>
+<th data-quarto-table-cell-role="th">psch_atlstba</th>
+<th data-quarto-table-cell-role="th">pop_propurban</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">count</td>
+<td>50083.000000</td>
+<td>50083.000000</td>
+<td>50083.000000</td>
+<td>50083.000000</td>
+<td>50083.000000</td>
+<td>50083.000000</td>
+<td>50083.000000</td>
+<td>50083.000000</td>
+<td>50083.000000</td>
+<td>50083.000000</td>
+<td>...</td>
+<td>49978.000000</td>
+<td>49978.000000</td>
+<td>48217.000000</td>
+<td>48047.000000</td>
+<td>48217.000000</td>
+<td>48221.000000</td>
+<td>48209.000000</td>
+<td>48214.000000</td>
+<td>48215.000000</td>
+<td>48217.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">mean</td>
+<td>0.666813</td>
+<td>0.333187</td>
+<td>0.222311</td>
+<td>0.222211</td>
+<td>0.166723</td>
+<td>0.166623</td>
+<td>0.166723</td>
+<td>0.166743</td>
+<td>0.222311</td>
+<td>0.222291</td>
+<td>...</td>
+<td>0.510245</td>
+<td>0.488715</td>
+<td>0.819599</td>
+<td>0.086710</td>
+<td>0.321694</td>
+<td>2.429012</td>
+<td>54815.700533</td>
+<td>0.669418</td>
+<td>0.391661</td>
+<td>0.871968</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">std</td>
+<td>0.471357</td>
+<td>0.471357</td>
+<td>0.415803</td>
+<td>0.415736</td>
+<td>0.372732</td>
+<td>0.372643</td>
+<td>0.372732</td>
+<td>0.372750</td>
+<td>0.415803</td>
+<td>0.415790</td>
+<td>...</td>
+<td>0.499900</td>
+<td>0.499878</td>
+<td>0.168560</td>
+<td>0.135868</td>
+<td>0.103039</td>
+<td>0.378105</td>
+<td>22027.316665</td>
+<td>0.193405</td>
+<td>0.186599</td>
+<td>0.258633</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">min</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>...</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.009418</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>5000.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">25%</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>...</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.755845</td>
+<td>0.014729</td>
+<td>0.258311</td>
+<td>2.210000</td>
+<td>39181.000000</td>
+<td>0.560222</td>
+<td>0.235647</td>
+<td>0.884929</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">50%</td>
+<td>1.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>...</td>
+<td>1.000000</td>
+<td>0.000000</td>
+<td>0.872797</td>
+<td>0.036554</td>
+<td>0.305534</td>
+<td>2.440000</td>
+<td>50673.000000</td>
+<td>0.712296</td>
+<td>0.373744</td>
+<td>1.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">75%</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>...</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>0.938827</td>
+<td>0.090882</td>
+<td>0.369132</td>
+<td>2.660000</td>
+<td>66005.000000</td>
+<td>0.816798</td>
+<td>0.530036</td>
+<td>1.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">max</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>...</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>0.989622</td>
+<td>0.997544</td>
+<td>5.270000</td>
+<td>200001.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+</tr>
+</tbody>
+</table>
+
+<p>8 rows × 48 columns</p>
+</div>
+</div>
+</div>
 <p>::::</p>
 </section>
 <section id="balance-test" class="level3">
@@ -715,16 +1397,21 @@ t = \frac{\bar{X}_{\text{treatment}} - \bar{X}_{\text{control}}}{\sqrt{\frac{s^2
 <section id="charitable-contribution-made-1" class="level3">
 <h3 class="anchored" data-anchor-id="charitable-contribution-made-1">Charitable Contribution Made</h3>
 <p>We examine whether the treatment group had a higher donation rate compared to the control group.</p>
-<div id="198606a8" class="cell" data-execution_count="2">
+<div id="3af4961a" class="cell" data-message="false" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw1_questions (4)_files/figure-html/cell-3-output-1.png" width="606" height="449" class="figure-img"></p>
+<p><img src="hw1_questions (4)_files/figure-html/cell-5-output-1.png" width="606" height="449" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<div id="b82e2859" class="cell" data-execution_count="3">
+<p>The bar chart above compares the average donation rates between individuals in the control group and those in the treatment group. The control group received a standard fundraising letter, while the treatment group received a letter that included a matching donation offer.</p>
+<p>Although the overall donation rates are low in both groups, the treatment group shows a visibly higher proportion of individuals who donated. This difference, though modest, is consistent with the hypothesis that matching gifts encourage charitable giving. The visual evidence aligns with the statistical results from t-tests and regressions presented later in the analysis, and replicates the main findings of Karlan and List (2007), where even small psychological nudges—like a matching offer—can lead to meaningful behavioral changes.</p>
+<section id="t-test-for-donation-rates" class="level4">
+<h4 class="anchored" data-anchor-id="t-test-for-donation-rates">T-Test for Donation Rates</h4>
+<p>This code performs an independent samples t-test to determine whether the mean donation rate (<code>gave</code>) differs significantly between the treatment and control groups. Since <code>gave</code> is a binary outcome indicating whether a donation was made, the test compares the proportion of donors across the two groups to assess the effect of receiving a matching donation offer.</p>
+<div id="76aa71d3" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># T-test on binary outcome (gave)</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>treat <span class="op">=</span> data[data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>][<span class="st">'gave'</span>]</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>control <span class="op">=</span> data[data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">0</span>][<span class="st">'gave'</span>]</span>
@@ -736,11 +1423,14 @@ t = \frac{\bar{X}_{\text{treatment}} - \bar{X}_{\text{control}}}{\sqrt{\frac{s^2
 T-statistic: 3.209, p-value: 0.001</code></pre>
 </div>
 </div>
-<div id="ea54ddd5" class="cell" data-execution_count="4">
+<p>The result of the t-test yields a t-statistic of 3.209 with a p-value of 0.001. This indicates a statistically significant difference in donation rates between the treatment and control groups at the 1% significance level. In other words, individuals who received a matching donation offer were significantly more likely to donate than those who did not, supporting the hypothesis that such offers increase giving behavior.</p>
+<p>To complement the t-test, we estimate a simple ordinary least squares (OLS) regression to evaluate the effect of the treatment assignment on the probability of giving. The binary outcome variable <code>gave</code> is regressed on the treatment indicator, which equals 1 for those who received a matching donation offer and 0 for the control group.</p>
+<p>This model can be interpreted as a comparison of group means, where the intercept represents the donation rate in the control group, and the treatment coefficient captures the average difference in donation rates between groups.</p>
+<div id="d5b8b473" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bivariate OLS regression: gave ~ treatment</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> smf.ols(<span class="st">"gave ~ treatment"</span>, data<span class="op">=</span>data).fit()</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>model.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
+<div class="cell-output cell-output-display" data-execution_count="6">
 <table class="simpletable caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>OLS Regression Results</caption>
 <tbody>
@@ -770,7 +1460,7 @@ T-statistic: 3.209, p-value: 0.001</code></pre>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">Time:</td>
-<td>22:20:00</td>
+<td>23:17:11</td>
 <td data-quarto-table-cell-role="th">Log-Likelihood:</td>
 <td>26630.</td>
 </tr>
@@ -866,7 +1556,9 @@ T-statistic: 3.209, p-value: 0.001</code></pre>
 <br><br>Notes:<br>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
 </div>
 </div>
-<div id="4b963b23" class="cell" data-execution_count="5">
+<p>The results confirm what we observed in the t-test. The coefficient on the <code>treatment</code> variable is <strong>0.0042</strong>, with a <strong>p-value of 0.002</strong>, indicating that the difference in donation rates between treatment and control is statistically significant at the 1% level.</p>
+<p>This suggests that receiving a matching donation offer increased the likelihood of giving by approximately <strong>0.42 percentage points</strong>. While this effect may seem small in absolute terms, it is consistent with the behavioral insights from Karlan and List (2007): even modest framing changes like mentioning a match can lead to meaningful increases in donor participation.</p>
+<div id="4ecebe45" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Probit regression: gave ~ treatment</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>probit_model <span class="op">=</span> smf.probit(<span class="st">"gave ~ treatment"</span>, data<span class="op">=</span>data).fit()</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>probit_model.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -875,7 +1567,7 @@ T-statistic: 3.209, p-value: 0.001</code></pre>
          Current function value: 0.100443
          Iterations 7</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="5">
+<div class="cell-output cell-output-display" data-execution_count="7">
 <table class="simpletable caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>Probit Regression Results</caption>
 <tbody>
@@ -905,7 +1597,7 @@ T-statistic: 3.209, p-value: 0.001</code></pre>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">Time:</td>
-<td>22:20:00</td>
+<td>23:17:11</td>
 <td data-quarto-table-cell-role="th">Log-Likelihood:</td>
 <td>-5030.5</td>
 </tr>
@@ -959,6 +1651,7 @@ T-statistic: 3.209, p-value: 0.001</code></pre>
 </div>
 </div>
 </section>
+</section>
 <section id="interpretation-of-experimental-results" class="level3">
 <h3 class="anchored" data-anchor-id="interpretation-of-experimental-results">Interpretation of Experimental Results</h3>
 <p>The evidence suggests that being assigned to the treatment group — receiving a matching donation offer — significantly increased the likelihood of making a charitable donation.</p>
@@ -981,7 +1674,7 @@ T-statistic: 3.209, p-value: 0.001</code></pre>
 </section>
 <section id="t-tests-for-match-ratios" class="level3">
 <h3 class="anchored" data-anchor-id="t-tests-for-match-ratios">T-tests for Match Ratios</h3>
-<div id="a46a0d78" class="cell" data-execution_count="6">
+<div id="2219de09" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter only treatment group and each match ratio</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>ratio1 <span class="op">=</span> data[(data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>) <span class="op">&amp;</span> (data[<span class="st">'ratio'</span>] <span class="op">==</span> <span class="dv">1</span>)][<span class="st">'gave'</span>]</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>ratio2 <span class="op">=</span> data[(data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>) <span class="op">&amp;</span> (data[<span class="st">'ratio'</span>] <span class="op">==</span> <span class="dv">2</span>)][<span class="st">'gave'</span>]</span>
@@ -1012,7 +1705,7 @@ These t-tests compare donation rates for each match ratio within the treatment g
 </section>
 <section id="regression-on-match-ratio-categorical" class="level3">
 <h3 class="anchored" data-anchor-id="regression-on-match-ratio-categorical">Regression on Match Ratio (Categorical)</h3>
-<div id="ffc32375" class="cell" data-execution_count="7">
+<div id="7e740c0f" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for treatment group and valid match ratios</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>match_data <span class="op">=</span> data[(data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>) <span class="op">&amp;</span> (data[<span class="st">'ratio'</span>].isin([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]))].copy()</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1022,7 +1715,7 @@ These t-tests compare donation rates for each match ratio within the treatment g
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the regression: donation behavior by match ratio</span></span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> smf.ols(<span class="st">"gave ~ C(ratio)"</span>, data<span class="op">=</span>match_data).fit()</span>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>model.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
+<div class="cell-output cell-output-display" data-execution_count="9">
 <table class="simpletable caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>OLS Regression Results</caption>
 <tbody>
@@ -1052,7 +1745,7 @@ These t-tests compare donation rates for each match ratio within the treatment g
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">Time:</td>
-<td>22:20:00</td>
+<td>23:17:11</td>
 <td data-quarto-table-cell-role="th">Log-Likelihood:</td>
 <td>16688.</td>
 </tr>
@@ -1168,7 +1861,7 @@ The regression estimates donation rates for each match ratio using the 1:1 match
 <hr>
 <section id="response-rate-differences-from-raw-data-and-model" class="level4">
 <h4 class="anchored" data-anchor-id="response-rate-differences-from-raw-data-and-model">Response Rate Differences from Raw Data and Model</h4>
-<div id="0f44a954" class="cell" data-execution_count="8">
+<div id="9b0c8fb7" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Group-level mean donation rates</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>ratio1 <span class="op">=</span> data[(data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>) <span class="op">&amp;</span> (data[<span class="st">'ratio'</span>] <span class="op">==</span> <span class="dv">1</span>)][<span class="st">'gave'</span>]</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>ratio2 <span class="op">=</span> data[(data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>) <span class="op">&amp;</span> (data[<span class="st">'ratio'</span>] <span class="op">==</span> <span class="dv">2</span>)][<span class="st">'gave'</span>]</span>
@@ -1193,7 +1886,7 @@ Response Rate 3:1 = 0.0227
 3:1 - 2:1 = 0.0001</code></pre>
 </div>
 </div>
-<div id="74942aa7" class="cell" data-execution_count="9">
+<div id="88c21160" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model-based differences from regression coefficients</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>coef <span class="op">=</span> model.params</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1235,16 +1928,16 @@ Conclusion
 </div>
 </div>
 </section>
-<section id="size-of-charitable-contribution" class="level3">
-<h3 class="anchored" data-anchor-id="size-of-charitable-contribution">Size of Charitable Contribution</h3>
-<p>In this subsection, I analyze the effect of the size of matched donation on the size of the charitable contribution.</p>
-<section id="full-sample-regression-includes-non-donors" class="level4">
-<h4 class="anchored" data-anchor-id="full-sample-regression-includes-non-donors">Full Sample Regression (Includes Non-Donors)</h4>
-<div id="55329669" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># OLS regression on full sample</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>model_full <span class="op">=</span> smf.ols(<span class="st">"amount ~ treatment"</span>, data<span class="op">=</span>data).fit()</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>model_full.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="10">
+</section>
+<section id="size-of-charitable-contribution" class="level2">
+<h2 class="anchored" data-anchor-id="size-of-charitable-contribution">Size of Charitable Contribution</h2>
+<p>In this subsection, I analyze the effect of the matching donation offer on the <strong>amount donated</strong>, not just whether individuals gave. I examine this in two ways: (1) using the full sample including non-donors, and (2) restricting the analysis to only those who made a donation.</p>
+<hr>
+<section id="full-sample-regression" class="level3">
+<h3 class="anchored" data-anchor-id="full-sample-regression">Full Sample Regression</h3>
+<p>The first model regresses the donation amount (<code>amount</code>) on the treatment assignment across the entire sample, including non-donors (who are coded as 0 for amount). This allows us to assess the <strong>average treatment effect</strong> on giving across all individuals.</p>
+<div id="aa5b7644" class="cell" data-execution_count="12">
+<div class="cell-output cell-output-display" data-execution_count="12">
 <table class="simpletable caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>OLS Regression Results</caption>
 <tbody>
@@ -1274,7 +1967,7 @@ Conclusion
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">Time:</td>
-<td>22:20:00</td>
+<td>23:17:11</td>
 <td data-quarto-table-cell-role="th">Log-Likelihood:</td>
 <td>-1.7946e+05</td>
 </tr>
@@ -1370,17 +2063,15 @@ Conclusion
 <br><br>Notes:<br>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
 </div>
 </div>
+<p>The regression results show that the <strong>intercept</strong> (average donation in the control group) is <strong>$0.8133</strong>, while the treatment effect is estimated at <strong>$0.1536</strong>. The p-value for the treatment coefficient is <strong>0.063</strong>, which is <strong>marginally significant</strong> at the 10% level.</p>
+<p>This suggests that receiving a matching offer may lead to a small increase in the average donation amount across the full sample, but the evidence is not strong enough to be statistically significant at conventional 5% thresholds.</p>
+<hr>
 </section>
-<section id="conditional-on-donation-only" class="level4">
-<h4 class="anchored" data-anchor-id="conditional-on-donation-only">Conditional on Donation Only</h4>
-<div id="7fcff028" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter to only those who gave a donation</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>donors <span class="op">=</span> data[data[<span class="st">'gave'</span>] <span class="op">==</span> <span class="dv">1</span>]</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># OLS regression among donors only</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>model_donors <span class="op">=</span> smf.ols(<span class="st">"amount ~ treatment"</span>, data<span class="op">=</span>donors).fit()</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>model_donors.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="11">
+<section id="regression-among-donors-only" class="level3">
+<h3 class="anchored" data-anchor-id="regression-among-donors-only">Regression Among Donors Only</h3>
+<p>Next, I restrict the sample to individuals who actually made a donation (<code>gave == 1</code>) to test whether the matching offer affected <strong>how much donors gave</strong>, conditional on donating.</p>
+<div id="7971f5d5" class="cell" data-execution_count="13">
+<div class="cell-output cell-output-display" data-execution_count="13">
 <table class="simpletable caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>OLS Regression Results</caption>
 <tbody>
@@ -1410,7 +2101,7 @@ Conclusion
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">Time:</td>
-<td>22:20:00</td>
+<td>23:17:11</td>
 <td data-quarto-table-cell-role="th">Log-Likelihood:</td>
 <td>-5326.8</td>
 </tr>
@@ -1506,14 +2197,21 @@ Conclusion
 <br><br>Notes:<br>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
 </div>
 </div>
+<p>Among donors, the <strong>average donation in the control group</strong> is approximately <strong>$45.54</strong>, as reflected in the intercept. The treatment group gave on average <strong>$1.67 less</strong> than the control group, though this difference is <strong>not statistically significant</strong> (p = <strong>0.561</strong>).</p>
+<hr>
 </section>
+<section id="interpretation-1" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation-1">Interpretation</h3>
+<p>These results indicate that while the treatment may increase the <strong>likelihood</strong> of giving (as seen earlier), it does <strong>not significantly affect the amount donated</strong>. In the full sample, the treatment effect is small and only marginally significant. Among those who donated, the estimated effect is negative and clearly not statistically significant.</p>
+<p>Because the treatment was randomly assigned, the coefficient estimates can be interpreted causally. However, it is important to note that the donor-only model is conditional on post-treatment behavior and may be affected by selection.</p>
+<p>Overall, this analysis supports the main takeaway from Karlan and List (2007): <strong>matching offers increase participation (extensive margin), but not the size of contributions (intensive margin)</strong>.</p>
 <section id="histogram-of-donation-amounts-treatment-group" class="level4">
 <h4 class="anchored" data-anchor-id="histogram-of-donation-amounts-treatment-group">Histogram of Donation Amounts: Treatment Group</h4>
-<div id="9ae1150a" class="cell" data-execution_count="12">
+<div id="f0875336" class="cell" data-execution_count="14">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw1_questions (4)_files/figure-html/cell-13-output-1.png" width="593" height="449" class="figure-img"></p>
+<p><img src="hw1_questions (4)_files/figure-html/cell-15-output-1.png" width="593" height="449" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1521,11 +2219,11 @@ Conclusion
 </section>
 <section id="histogram-of-donation-amounts-control-group" class="level4">
 <h4 class="anchored" data-anchor-id="histogram-of-donation-amounts-control-group">Histogram of Donation Amounts: Control Group</h4>
-<div id="f0944b96" class="cell" data-message="false" data-execution_count="13">
+<div id="26731f46" class="cell" data-message="false" data-execution_count="15">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw1_questions (4)_files/figure-html/cell-14-output-1.png" width="585" height="449" class="figure-img"></p>
+<p><img src="hw1_questions (4)_files/figure-html/cell-16-output-1.png" width="585" height="449" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1533,8 +2231,8 @@ Conclusion
 <hr>
 </section>
 </section>
-<section id="interpretation-1" class="level3">
-<h3 class="anchored" data-anchor-id="interpretation-1">Interpretation</h3>
+<section id="interpretation-2" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation-2">Interpretation</h3>
 <blockquote class="blockquote">
 <p>Interpretation:<br>
 In the regression using the full sample, we find that the treatment group donated $0.15 more on average than the control group. However, this result is not statistically significant (p = 0.063), meaning we cannot rule out that the difference is due to random chance.</p>
@@ -1554,19 +2252,31 @@ In the regression using the full sample, we find that the treatment group donate
 <h3 class="anchored" data-anchor-id="law-of-large-numbers">Law of Large Numbers</h3>
 <p>We simulate two large samples: - One from the control group (donation probability = 0.018) - One from the treatment group (donation probability = 0.022)</p>
 <p>We calculate the difference between matched pairs, and then compute the cumulative average difference.</p>
-<div id="a54ad217" class="cell" data-message="false" data-execution_count="14">
+</section>
+<section id="law-of-large-numbers-1" class="level3">
+<h3 class="anchored" data-anchor-id="law-of-large-numbers-1">Law of Large Numbers</h3>
+<p>To illustrate the Law of Large Numbers, I simulate two groups: one representing respondents who did not receive a matching donation offer (control, with donation probability ( p = 0.018 )), and one representing those who did (treatment, with ( p = 0.022 )). I draw 10,000 samples from each group and compute the difference for each pair. Then, I calculate and plot the <strong>cumulative average</strong> of these differences.</p>
+</section>
+<section id="law-of-large-numbers-2" class="level3">
+<h3 class="anchored" data-anchor-id="law-of-large-numbers-2">Law of Large Numbers</h3>
+<p>To illustrate the Law of Large Numbers, I simulate two groups: one representing respondents who did not receive a matching donation offer (control, with donation probability ( p = 0.018 )), and one representing those who did (treatment, with ( p = 0.022 )). I draw 10,000 samples from each group and compute the difference for each pair. Then, I calculate and plot the <strong>cumulative average</strong> of these differences.</p>
+<div id="1068f068" class="cell" data-message="false" data-execution_count="16">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw1_questions (4)_files/figure-html/cell-15-output-1.png" width="832" height="449" class="figure-img"></p>
+<p><img src="hw1_questions (4)_files/figure-html/cell-17-output-1.png" width="832" height="449" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>As shown in the plot above, the cumulative average of the differences fluctuates at first but gradually stabilizes around the true expected difference of <strong>0.004</strong>. This pattern exemplifies the <strong>Law of Large Numbers</strong>, which states that as the number of observations increases, the sample average converges to the population mean.</p>
+<p>This visualization demonstrates that even with a small true effect size, a sufficiently large number of observations can reveal consistent patterns. It provides a conceptual foundation for why the original Karlan and List experiment, which involved tens of thousands of letters, was able to detect subtle differences in donation behavior.</p>
+<p>As shown in the plot above, the cumulative average of the differences fluctuates at first but gradually stabilizes around the true expected difference of <strong>0.004</strong>. This pattern exemplifies the <strong>Law of Large Numbers</strong>, which states that as the number of observations increases, the sample average converges to the population mean.</p>
+<p>This visualization demonstrates that even with a small true effect size, a sufficiently large number of observations can reveal consistent patterns. It provides a conceptual foundation for why the original Karlan and List experiment, which involved tens of thousands of letters, was able to detect subtle differences in donation behavior.</p>
 <hr>
 </section>
-<section id="interpretation-2" class="level3">
-<h3 class="anchored" data-anchor-id="interpretation-2">Interpretation</h3>
+<section id="interpretation-3" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation-3">Interpretation</h3>
 <blockquote class="blockquote">
 <p>The simulation demonstrates the <strong>Law of Large Numbers</strong>, which states that as the number of observations increases, the sample average converges to the population mean.</p>
 <p>In this plot, the cumulative average difference in donation rates between the treatment (p = 0.022) and control (p = 0.018) groups begins with wide fluctuations due to randomness in the early observations. However, as we simulate more and more matched pairs (up to 100,000), the cumulative difference stabilizes and converges to the true expected difference of <strong>0.004</strong>.</p>
@@ -1576,19 +2286,19 @@ In the regression using the full sample, we find that the treatment group donate
 <section id="central-limit-theorem" class="level3">
 <h3 class="anchored" data-anchor-id="central-limit-theorem">Central Limit Theorem</h3>
 <p>We simulate distributions of average differences in donation rates between control (p = 0.018) and treatment (p = 0.022) groups, using increasing sample sizes (n = 50, 200, 500, 1000). For each sample size, we repeat the process 1000 times and visualize the distribution of sample differences.</p>
-<div id="eab562f4" class="cell" data-message="false" data-execution_count="15">
+<div id="969f590d" class="cell" data-message="false" data-execution_count="17">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw1_questions (4)_files/figure-html/cell-16-output-1.png" width="1142" height="758" class="figure-img"></p>
+<p><img src="hw1_questions (4)_files/figure-html/cell-18-output-1.png" width="1142" height="758" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <hr>
 </section>
-<section id="interpretation-3" class="level3">
-<h3 class="anchored" data-anchor-id="interpretation-3">Interpretation</h3>
+<section id="interpretation-4" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation-4">Interpretation</h3>
 <blockquote class="blockquote">
 <p>These four histograms illustrate the <strong>Central Limit Theorem</strong> using simulated sample means of donation rate differences between the treatment (p = 0.022) and control (p = 0.018) groups.</p>
 <p>As the sample size increases: - With <strong>n = 50</strong>, the distribution is wide and noisy — there’s considerable variation, and the true mean difference (0.004) is not clearly distinguishable from zero. - At <strong>n = 200</strong>, the distribution begins to resemble a bell curve, and the true difference is more centered. - At <strong>n = 500</strong>, the histogram tightens noticeably, and zero begins to lie closer to the tail of the distribution. - By <strong>n = 1000</strong>, the sample mean differences are tightly clustered around 0.004, and <strong>zero is clearly no longer at the center</strong> — it lies in the tail, suggesting strong evidence against the null of no effect.</p>

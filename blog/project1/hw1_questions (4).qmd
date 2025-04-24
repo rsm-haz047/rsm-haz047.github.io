@@ -23,8 +23,11 @@ This project seeks to replicate some of their core findings using the original d
 ### Description
 
 We load and explore the dataset from Karlan and List (2007).
-
 ```{python}
+#| echo: false
+#| warning: false
+#| message: false
+
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -33,12 +36,7 @@ import statsmodels.formula.api as smf
 from scipy import stats
 
 data = pd.read_stata("/Users/hanhuazhu/Downloads/karlan_list_2007 (2).dta")
-
-# Preview first few rows
-data.head()
 ```
-
-
 
 
 
@@ -98,6 +96,26 @@ data.head()
 | `powner`             | Proportion house owner within zip code                              |
 | `psch_atlstba`       | Proportion who finished college within zip code                     |
 | `pop_propurban`      | Proportion of population urban within zip code                      |
+
+```{python}
+#| echo: false
+#| message: false
+#| warning: false
+
+# Overview of data structure and sample records
+data.info()
+data.describe().T
+
+```
+
+```{python}
+#| echo: false
+#| message: false
+#| warning: false
+
+# Show summary statistics for key variables
+data.describe().round(6)
+```
 
 ::::
 
@@ -166,16 +184,33 @@ First, I analyze whether matched donations lead to an increased response rate of
 We examine whether the treatment group had a higher donation rate compared to the control group.
 ```{python}
 #| echo: false
+#| warning: false
+#| message: false
 
 import seaborn as sns
 import matplotlib.pyplot as plt
+import pandas as pd
 
-sns.barplot(data=data, x="treatment", y="gave", errorbar=None)
-plt.xticks([0, 1], ["Control", "Treatment"])
+# Create a copy to avoid altering the original DataFrame
+plot_data = data.copy()
+plot_data["treatment_label"] = plot_data["treatment"].map({0: "Control", 1: "Treatment"})
+
+# Set custom colors
+custom_colors = ["steelblue", "darkorange"]
+
+sns.barplot(data=plot_data, x="treatment_label", y="gave", errorbar=None, palette=custom_colors)
 plt.ylabel("Proportion Donated")
 plt.title("Donation Rate by Treatment Group")
 plt.show()
 ```
+The bar chart above compares the average donation rates between individuals in the control group and those in the treatment group. The control group received a standard fundraising letter, while the treatment group received a letter that included a matching donation offer.
+
+Although the overall donation rates are low in both groups, the treatment group shows a visibly higher proportion of individuals who donated. This difference, though modest, is consistent with the hypothesis that matching gifts encourage charitable giving. The visual evidence aligns with the statistical results from t-tests and regressions presented later in the analysis, and replicates the main findings of Karlan and List (2007), where even small psychological nudges—like a matching offer—can lead to meaningful behavioral changes.
+
+
+#### T-Test for Donation Rates
+
+This code performs an independent samples t-test to determine whether the mean donation rate (`gave`) differs significantly between the treatment and control groups. Since `gave` is a binary outcome indicating whether a donation was made, the test compares the proportion of donors across the two groups to assess the effect of receiving a matching donation offer.
 
 
 ```{python}
@@ -186,12 +221,21 @@ control = data[data['treatment'] == 0]['gave']
 t_stat, p_val = stats.ttest_ind(treat, control, equal_var=False)
 print(f"T-test for 'gave':\nT-statistic: {t_stat:.3f}, p-value: {p_val:.3f}")
 ```
+The result of the t-test yields a t-statistic of 3.209 with a p-value of 0.001. This indicates a statistically significant difference in donation rates between the treatment and control groups at the 1% significance level. In other words, individuals who received a matching donation offer were significantly more likely to donate than those who did not, supporting the hypothesis that such offers increase giving behavior.
 
+
+
+To complement the t-test, we estimate a simple ordinary least squares (OLS) regression to evaluate the effect of the treatment assignment on the probability of giving. The binary outcome variable `gave` is regressed on the treatment indicator, which equals 1 for those who received a matching donation offer and 0 for the control group.
+
+This model can be interpreted as a comparison of group means, where the intercept represents the donation rate in the control group, and the treatment coefficient captures the average difference in donation rates between groups.
 ```{python}
 # Bivariate OLS regression: gave ~ treatment
 model = smf.ols("gave ~ treatment", data=data).fit()
 model.summary()
 ```
+The results confirm what we observed in the t-test. The coefficient on the `treatment` variable is **0.0042**, with a **p-value of 0.002**, indicating that the difference in donation rates between treatment and control is statistically significant at the 1% level.
+
+This suggests that receiving a matching donation offer increased the likelihood of giving by approximately **0.42 percentage points**. While this effect may seem small in absolute terms, it is consistent with the behavioral insights from Karlan and List (2007): even modest framing changes like mentioning a match can lead to meaningful increases in donor participation.
 
 ```{python}
 # Probit regression: gave ~ treatment
@@ -331,41 +375,66 @@ Neither the t-tests nor the regression provide strong evidence that increasing t
 
 
 
-### Size of Charitable Contribution
+## Size of Charitable Contribution
 
-In this subsection, I analyze the effect of the size of matched donation on the size of the charitable contribution.
+In this subsection, I analyze the effect of the matching donation offer on the **amount donated**, not just whether individuals gave. I examine this in two ways: (1) using the full sample including non-donors, and (2) restricting the analysis to only those who made a donation.
 
-#### Full Sample Regression (Includes Non-Donors)
+---
+
+### Full Sample Regression
+
+The first model regresses the donation amount (`amount`) on the treatment assignment across the entire sample, including non-donors (who are coded as 0 for amount). This allows us to assess the **average treatment effect** on giving across all individuals.
 
 ```{python}
-# OLS regression on full sample
+#| echo: false
 model_full = smf.ols("amount ~ treatment", data=data).fit()
 model_full.summary()
 ```
 
-#### Conditional on Donation Only
+The regression results show that the **intercept** (average donation in the control group) is **$0.8133**, while the treatment effect is estimated at **$0.1536**. The p-value for the treatment coefficient is **0.063**, which is **marginally significant** at the 10% level.
+
+This suggests that receiving a matching offer may lead to a small increase in the average donation amount across the full sample, but the evidence is not strong enough to be statistically significant at conventional 5% thresholds.
+
+---
+
+### Regression Among Donors Only
+
+Next, I restrict the sample to individuals who actually made a donation (`gave == 1`) to test whether the matching offer affected **how much donors gave**, conditional on donating.
 
 ```{python}
-# Filter to only those who gave a donation
-donors = data[data['gave'] == 1]
-
-# OLS regression among donors only
+#| echo: false
+donors = data[data["gave"] == 1]
 model_donors = smf.ols("amount ~ treatment", data=donors).fit()
 model_donors.summary()
 ```
 
-#### Histogram of Donation Amounts: Treatment Group
+Among donors, the **average donation in the control group** is approximately **$45.54**, as reflected in the intercept. The treatment group gave on average **$1.67 less** than the control group, though this difference is **not statistically significant** (p = **0.561**).
 
+---
+
+### Interpretation
+
+These results indicate that while the treatment may increase the **likelihood** of giving (as seen earlier), it does **not significantly affect the amount donated**. In the full sample, the treatment effect is small and only marginally significant. Among those who donated, the estimated effect is negative and clearly not statistically significant.
+
+Because the treatment was randomly assigned, the coefficient estimates can be interpreted causally. However, it is important to note that the donor-only model is conditional on post-treatment behavior and may be affected by selection.
+
+Overall, this analysis supports the main takeaway from Karlan and List (2007): **matching offers increase participation (extensive margin), but not the size of contributions (intensive margin)**.
+
+
+
+
+#### Histogram of Donation Amounts: Treatment Group
 ```{python}
 #| echo: false
 
-sns.histplot(donors[donors['treatment'] == 1]['amount'], bins=30)
+sns.histplot(donors[donors['treatment'] == 1]['amount'], bins=30, color='darkorange')
 plt.axvline(donors[donors['treatment'] == 1]['amount'].mean(), color='red', linestyle='--', label='Mean')
 plt.title("Donation Amounts – Treatment Group")
 plt.xlabel("Amount")
 plt.legend()
 plt.show()
 ```
+
 
 
 #### Histogram of Donation Amounts: Control Group
@@ -418,45 +487,59 @@ We simulate two large samples:
 
 We calculate the difference between matched pairs, and then compute the cumulative average difference.
 
+### Law of Large Numbers
+
+To illustrate the Law of Large Numbers, I simulate two groups: one representing respondents who did not receive a matching donation offer (control, with donation probability \( p = 0.018 \)), and one representing those who did (treatment, with \( p = 0.022 \)). I draw 10,000 samples from each group and compute the difference for each pair. Then, I calculate and plot the **cumulative average** of these differences.
+
+### Law of Large Numbers
+
+To illustrate the Law of Large Numbers, I simulate two groups: one representing respondents who did not receive a matching donation offer (control, with donation probability \( p = 0.018 \)), and one representing those who did (treatment, with \( p = 0.022 \)). I draw 10,000 samples from each group and compute the difference for each pair. Then, I calculate and plot the **cumulative average** of these differences.
+
 ```{python}
 #| echo: false
 #| warning: false
 #| message: false
 
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 
-# Set seed for reproducibility
 np.random.seed(42)
 
-# Extract 'gave' values for treatment and control groups
-control_gave = data[data['treatment'] == 0]['gave'].values
-treat_gave = data[data['treatment'] == 1]['gave'].values
+# Simulate control group as large population
+control_pop = np.random.binomial(1, 0.018, 100_000)
 
-# Randomly draw 10,000 samples with replacement from each group
-control_sample = np.random.choice(control_gave, size=10_000, replace=True)
-treat_sample = np.random.choice(treat_gave, size=10_000, replace=True)
+# Simulate 10,000 paired draws
+control_sample = np.random.choice(control_pop, size=10_000, replace=True)
+treatment_sample = np.random.binomial(1, 0.022, 10_000)
 
-# Compute difference in each draw (treatment - control)
-diffs = treat_sample - control_sample  # values in {-1, 0, 1}
+# Compute vector of differences
+diffs = treatment_sample - control_sample
 
-# Compute cumulative average of differences
+# Cumulative average
 cum_avg = np.cumsum(diffs) / np.arange(1, len(diffs) + 1)
 
 # Plot
 plt.figure(figsize=(10, 5))
-plt.plot(cum_avg, label="Cumulative Avg. Difference")
-plt.axhline(np.mean(treat_gave) - np.mean(control_gave), color='red', linestyle='--',
-            label=f"True Mean Difference ({np.mean(treat_gave) - np.mean(control_gave):.3f})")
-plt.title("Cumulative Average of Treatment vs Control (from real data)")
+plt.plot(cum_avg, label="Cumulative Avg. Difference", color='darkorange')
+plt.axhline(y=0.004, color='red', linestyle='--', label="True Mean Difference (0.004)")
+plt.title("Law of Large Numbers Simulation")
 plt.xlabel("Number of Observations")
 plt.ylabel("Cumulative Average Difference")
 plt.legend()
 plt.grid(True)
 plt.show()
-
 ```
+
+As shown in the plot above, the cumulative average of the differences fluctuates at first but gradually stabilizes around the true expected difference of **0.004**. This pattern exemplifies the **Law of Large Numbers**, which states that as the number of observations increases, the sample average converges to the population mean.
+
+This visualization demonstrates that even with a small true effect size, a sufficiently large number of observations can reveal consistent patterns. It provides a conceptual foundation for why the original Karlan and List experiment, which involved tens of thousands of letters, was able to detect subtle differences in donation behavior.
+
+
+As shown in the plot above, the cumulative average of the differences fluctuates at first but gradually stabilizes around the true expected difference of **0.004**. This pattern exemplifies the **Law of Large Numbers**, which states that as the number of observations increases, the sample average converges to the population mean.
+
+This visualization demonstrates that even with a small true effect size, a sufficiently large number of observations can reveal consistent patterns. It provides a conceptual foundation for why the original Karlan and List experiment, which involved tens of thousands of letters, was able to detect subtle differences in donation behavior.
+
+
 
 
 ---
