@@ -662,7 +662,7 @@ In this section, we assume that the number of reviews is a valid proxy for the n
 
 ```{python}
 #| label: airbnb-cleaning
-#| echo:false
+#| echo: false
 
 import pandas as pd
 import numpy as np
