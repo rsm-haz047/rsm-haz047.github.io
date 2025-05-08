@@ -730,7 +730,7 @@ numeric_summary
 
 ```{python}
 #| label: airbnb-eda
-#| echo: true
+#| echo: false
 #| fig-cap: "Distribution of Number of Reviews"
 
 import seaborn as sns
@@ -746,5 +746,48 @@ plt.xlim(0, 100)
 plt.tight_layout()
 plt.show()
 ```
+This histogram shows a highly right-skewed distribution of the number of reviews per Airbnb listing. Most listings receive fewer than 20 reviews, with a sharp drop-off beyond that point. A small number of listings have 50 or more reviews, indicating that a few highly booked properties dominate review volume. This skewness supports the use of a Poisson (or possibly negative binomial) model for count-based regression.
+
+### Distribution of Number of Reviews by Room Type
+
+The plot below shows the full distribution of review counts (a proxy for bookings) across different room types. Violin plots provide more detail than boxplots by visualizing the density of the data.
+
+```{python}
+#| label: plot-reviews-by-room-type
+#| fig-cap: "Distribution of Number of Reviews by Room Type"
+#| echo: false
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Load data (if not already loaded)
+df = pd.read_csv("~/Downloads/airbnb.csv")  # adjust path if needed
+
+# Create violin plot
+plt.figure(figsize=(10, 6))
+sns.violinplot(
+    data=df,
+    x="room_type",
+    y="number_of_reviews",
+    inner="quartile",
+    cut=0,
+    palette="Set2"
+)
+plt.title("Distribution of Number of Reviews by Room Type")
+plt.xlabel("Room Type")
+plt.ylabel("Number of Reviews")
+plt.xticks(rotation=15)
+plt.tight_layout()
+plt.show()
+```
+
+The violin plot above illustrates the distribution of the number of reviews (used here as a proxy for bookings) across different room types: Private Room, Entire Home/Apt, and Shared Room. Each distribution is highly right-skewed, with the majority of listings receiving relatively few reviews and a long tail of listings with many.
+
+While all room types follow a similar overall pattern, there are some subtle differences in the spread and density. Private rooms and entire home/apartment listings show comparable distributions, both with slightly higher concentrations of listings receiving moderate review counts. Shared rooms, on the other hand, exhibit a more compressed distribution, suggesting they may receive fewer bookings overall, or are listed less frequently.
+
+Overall, the visual supports including `room_type` as a categorical predictor in a Poisson regression model, though the similarities across categories suggest that its impact on bookings may be modest compared to other factors like price or location.
+
+ 
 
 
