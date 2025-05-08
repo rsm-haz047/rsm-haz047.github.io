@@ -492,11 +492,12 @@ We estimated a Poisson Generalized Linear Model (GLM) using `statsmodels.GLM` wi
 
 The model takes the form:
 
-\[
-\log(\lambda_i) = \beta_0 + \beta_1 \cdot \text{age}_i + \beta_2 \cdot \text{age}_i^2 + \beta_3 \cdot \text{iscustomer}_i + \text{region effects}
-\]
+The model takes the form:
 
----
+$$
+\log(\lambda_i) = \beta_0 + \beta_1 \cdot \text{age}_i + \beta_2 \cdot \text{age}_i^2 + \beta_3 \cdot \text{iscustomer}_i + \text{region effects}
+$$
+
 
 ####  Model Fit Summary
 

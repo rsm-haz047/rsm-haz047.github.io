@@ -280,7 +280,7 @@ window.Quarto = {
 <section id="data" class="level3">
 <h3 class="anchored" data-anchor-id="data">Data</h3>
 <p>We begin by loading the dataset containing information on engineering firms and their patenting activity. This includes whether or not a firm uses Blueprinty’s software.</p>
-<div id="210c7404" class="cell" data-execution_count="1">
+<div id="75bea29a" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 
@@ -649,7 +649,7 @@ Figure&nbsp;4: Poisson Log-Likelihood as a Function of λ
 <span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>X_np <span class="op">=</span> X.to_numpy(dtype<span class="op">=</span>np.float64)</span>
 <span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>Y_np <span class="op">=</span> df[<span class="st">"patents"</span>].astype(<span class="bu">float</span>).to_numpy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="048c55b0" class="cell" data-execution_count="12">
+<div id="5d7a7ccd" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>X_clean <span class="op">=</span> pd.concat([</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    pd.Series(<span class="fl">1.0</span>, index<span class="op">=</span>df.index, name<span class="op">=</span><span class="st">"intercept"</span>), </span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    df[[<span class="st">"age"</span>, <span class="st">"age_sq"</span>, <span class="st">"iscustomer"</span>]].astype(<span class="bu">float</span>),</span>
@@ -659,7 +659,7 @@ Figure&nbsp;4: Poisson Log-Likelihood as a Function of λ
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>X_np <span class="op">=</span> X_clean.to_numpy(dtype<span class="op">=</span>np.float64)  </span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>Y_np <span class="op">=</span> df[<span class="st">"patents"</span>].astype(<span class="bu">float</span>).to_numpy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="391de9f6" class="cell" data-execution_count="13">
+<div id="557fd98b" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> minimize</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -687,7 +687,7 @@ Figure&nbsp;4: Poisson Log-Likelihood as a Function of λ
        -0.0186009 ,  0.05259172,  0.06118601])</code></pre>
 </div>
 </div>
-<div id="52f5e3ed" class="cell" data-execution_count="14">
+<div id="ccc29182" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>cov_beta <span class="op">=</span> result.hess_inv</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>se_beta <span class="op">=</span> np.sqrt(np.diagonal(cov_beta))</span>
@@ -767,7 +767,7 @@ Figure&nbsp;4: Poisson Log-Likelihood as a Function of λ
 </div>
 </div>
 </div>
-<div id="058233f1" class="cell" data-execution_count="15">
+<div id="07df83f3" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>glm_model <span class="op">=</span> sm.GLM(Y_np, X_np, family<span class="op">=</span>sm.families.Poisson())</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>glm_results <span class="op">=</span> glm_model.fit()</span>
@@ -814,7 +814,7 @@ Figure&nbsp;4: Poisson Log-Likelihood as a Function of λ
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">Time:</td>
-<td>23:33:06</td>
+<td>23:36:54</td>
 <td data-quarto-table-cell-role="th">Pearson chi2:</td>
 <td>2.07e+03</td>
 </tr>
@@ -943,8 +943,10 @@ Figure&nbsp;4: Poisson Log-Likelihood as a Function of λ
 </ul></li>
 </ul>
 <p>The model takes the form:</p>
-<p>[ (_i) = _0 + _1 _i + _2 _i^2 + _3 _i + ]</p>
-<hr>
+<p>The model takes the form:</p>
+<p><span class="math display">\[
+\log(\lambda_i) = \beta_0 + \beta_1 \cdot \text{age}_i + \beta_2 \cdot \text{age}_i^2 + \beta_3 \cdot \text{iscustomer}_i + \text{region effects}
+\]</span></p>
 </section>
 <section id="model-fit-summary" class="level4">
 <h4 class="anchored" data-anchor-id="model-fit-summary">Model Fit Summary</h4>
@@ -1201,7 +1203,7 @@ Figure&nbsp;4: Poisson Log-Likelihood as a Function of λ
 <li><code>X_1</code>: Every firm is treated as a <strong>customer</strong> (<code>iscustomer = 1</code>)</li>
 </ul>
 <p>Using the fitted model coefficients, we compare the predicted number of patents under both cases and compute the average difference.</p>
-<div id="41fdff8e" class="cell" data-execution_count="17">
+<div id="dbe6b340" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>X_no_customer <span class="op">=</span> X_clean.copy()</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>X_no_customer.loc[:, <span class="st">"iscustomer"</span>] <span class="op">=</span> <span class="dv">0</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1885,7 +1887,7 @@ Variable Definitions
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">Time:</td>
-<td>23:33:08</td>
+<td>23:36:55</td>
 <td data-quarto-table-cell-role="th">Pearson chi2:</td>
 <td>1.37e+06</td>
 </tr>
