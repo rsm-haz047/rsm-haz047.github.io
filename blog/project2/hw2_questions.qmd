@@ -35,6 +35,8 @@ To understand whether firms using Blueprinty's software tend to receive more pat
 
 ```{python}
 #| echo: false
+#| warning: false
+#| message: false
 
 import seaborn as sns
 import matplotlib.pyplot as plt
