@@ -342,13 +342,6 @@ The optimization routine returns an estimated $\hat{\lambda} \approx 3.6847$, wh
 
 Next, we extend our simple Poisson model to a Poisson Regression Model such that $Y_i = \text{Poisson}(\lambda_i)$ where $\lambda_i = \exp(X_i'\beta)$. The interpretation is that the success rate of patent awards is not constant across all firms ($\lambda$) but rather is a function of firm characteristics $X_i$. Specifically, we will use the covariates age, age squared, region, and whether the firm is a customer of Blueprinty.
 
-_todo: Update your likelihood or log-likelihood function with an additional argument to take in a covariate matrix X. Also change the parameter of the model from lambda to the beta vector. In this model, lambda must be a positive number, so we choose the inverse link function g_inv() to be exp() so that_ $\lambda_i = e^{X_i'\beta}$. _For example:_
-
-```
-poisson_regression_likelihood <- function(beta, Y, X){
-   ...
-}
-```
 
 ### Poisson Regression Log-Likelihood Function
 
@@ -360,18 +353,17 @@ We now define the log-likelihood function for the Poisson regression model. This
 
 and assumes the inverse link function $g^{-1}(\cdot) = \exp(\cdot)$ so that:
 
-\[
+$$
 \lambda_i = \exp(X_i^\top \beta)
-\]
+$$
 
 This guarantees $\lambda_i > 0$ for all observations, as required in the Poisson model. The resulting log-likelihood function is:
 
-\[
+$$
 \log \mathcal{L}(\beta) = \sum_{i=1}^{n} \left( Y_i \log(\lambda_i) - \lambda_i - \log(Y_i!) \right)
-\]
+$$
 
 Below is the corresponding Python implementation.
-
 
 ```{python}
 #| label: poisson-loglik-eval
