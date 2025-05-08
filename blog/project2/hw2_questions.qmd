@@ -44,8 +44,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Load data
-df = pd.read_csv("blueprinty.csv")
-
+df = pd.read_csv("/Users/hanhuazhu/Desktop/mywebsite/blog/project2/blueprinty.csv")
 # Create a column with label
 df['customer_status'] = df['iscustomer'].map({0: "Non-Customer", 1: "Customer"})
 
@@ -74,7 +73,7 @@ plt.show()
 import pandas as pd
 
 # Load the dataset
-df = pd.read_csv("blueprinty.csv")
+df = pd.read_csv("/Users/hanhuazhu/Desktop/mywebsite/blog/project2/blueprinty.csv")
 
 # Create a label column
 df['customer_status'] = df['iscustomer'].map({0: "Non-Customer", 1: "Customer"})
@@ -110,7 +109,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # Load data
-df = pd.read_csv("blueprinty.csv")
+df = pd.read_csv("/Users/hanhuazhu/Desktop/mywebsite/blog/project2/blueprinty.csv")
 df['customer_status'] = df['iscustomer'].map({0: 'Non-Customer', 1: 'Customer'})
 
 # Plot region distribution
@@ -180,7 +179,7 @@ import pandas as pd
 from scipy.special import gammaln
 
 # Load data
-df = pd.read_csv("blueprinty.csv")
+df = pd.read_csv("/Users/hanhuazhu/Desktop/mywebsite/blog/project2/blueprinty.csv")
 y = df["patents"]
 
 def poisson_log_likelihood(y, lamb):
@@ -217,7 +216,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.special import gammaln
-df = pd.read_csv("blueprinty.csv")
+df = pd.read_csv("/Users/hanhuazhu/Desktop/mywebsite/blog/project2/blueprinty.csv")
 Y = df["patents"]
 def poisson_log_likelihood(Y, lambda_):
     Y = np.asarray(Y)
@@ -282,7 +281,7 @@ Now we verify this with code:
 #| echo: true
 
 import pandas as pd
-df = pd.read_csv("blueprinty.csv")
+df = pd.read_csv("/Users/hanhuazhu/Desktop/mywebsite/blog/project2/blueprinty.csv")
 Y = df["patents"]
 lambda_mle = Y.mean()
 lambda_mle
@@ -319,7 +318,7 @@ import numpy as np
 import pandas as pd
 from scipy.special import gammaln
 from scipy.optimize import minimize
-df = pd.read_csv("blueprinty.csv")
+df = pd.read_csv("/Users/hanhuazhu/Desktop/mywebsite/blog/project2/blueprinty.csv")
 Y_data = df["patents"]
 
 def poisson_log_likelihood(y, lamb):
@@ -395,31 +394,38 @@ def poisson_regression_log_likelihood(beta, Y, X):
 
 import pandas as pd
 import numpy as np
-blueprinty = pd.read_csv("blueprinty.csv")
 
-blueprinty["age_sq"] = blueprinty["age"] ** 2
+# Load the dataset
+df = pd.read_csv("/Users/hanhuazhu/Desktop/mywebsite/blog/project2/blueprinty.csv")
 
-X_region = pd.get_dummies(blueprinty["region"], drop_first=True)
+# Add a new column: age squared
+df["age_sq"] = df["age"] ** 2
 
+# Create dummy variables for the 'region' column
+X_region = pd.get_dummies(df["region"], drop_first=True)
+
+# Create the full design matrix X
 X = pd.concat([
-    pd.Series(1, index=blueprinty.index, name="intercept"),  
-    blueprinty[["age", "age_sq", "iscustomer"]],
+    pd.Series(1, index=df.index, name="intercept"),
+    df[["age", "age_sq", "iscustomer"]],
     X_region
 ], axis=1)
 
+# Convert predictors and outcome to numpy arrays
 X_np = X.to_numpy(dtype=np.float64)
-Y_np = blueprinty["patents"].astype(float).to_numpy()
+Y_np = df["patents"].astype(float).to_numpy()
 ```
 ```{python}
 
 X_clean = pd.concat([
-    pd.Series(1.0, index=blueprinty.index, name="intercept"), 
-    blueprinty[["age", "age_sq", "iscustomer"]].astype(float),
-    pd.get_dummies(blueprinty["region"], drop_first=True).astype(float)
+    pd.Series(1.0, index=df.index, name="intercept"), 
+    df[["age", "age_sq", "iscustomer"]].astype(float),
+    pd.get_dummies(df["region"], drop_first=True).astype(float)
 ], axis=1)
 
 X_np = X_clean.to_numpy(dtype=np.float64)  
-Y_np = blueprinty["patents"].astype(float).to_numpy()
+Y_np = df["patents"].astype(float).to_numpy()
+
 ```
 ```{python}
 from sklearn.preprocessing import StandardScaler

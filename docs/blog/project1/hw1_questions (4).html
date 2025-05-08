@@ -506,7 +506,7 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
-<div id="eadd8fb9" class="cell" data-message="false" data-execution_count="2">
+<div id="99e7474d" class="cell" data-message="false" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -1060,7 +1060,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="4948fd48" class="cell" data-message="false" data-execution_count="3">
+<div id="c5637795" class="cell" data-message="false" data-execution_count="3">
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 
@@ -1351,7 +1351,7 @@ t = \frac{\bar{X}_{\text{treatment}} - \bar{X}_{\text{control}}}{\sqrt{\frac{s^2
 <section id="charitable-contribution-made-1" class="level3">
 <h3 class="anchored" data-anchor-id="charitable-contribution-made-1">Charitable Contribution Made</h3>
 <p>We examine whether the treatment group had a higher donation rate compared to the control group.</p>
-<div id="e550472a" class="cell" data-message="false" data-execution_count="4">
+<div id="2e21bfc6" class="cell" data-message="false" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1365,7 +1365,7 @@ t = \frac{\bar{X}_{\text{treatment}} - \bar{X}_{\text{control}}}{\sqrt{\frac{s^2
 <section id="t-test-for-donation-rates" class="level4">
 <h4 class="anchored" data-anchor-id="t-test-for-donation-rates">T-Test for Donation Rates</h4>
 <p>This code performs an independent samples t-test to determine whether the mean donation rate (<code>gave</code>) differs significantly between the treatment and control groups. Since <code>gave</code> is a binary outcome indicating whether a donation was made, the test compares the proportion of donors across the two groups to assess the effect of receiving a matching donation offer.</p>
-<div id="ee0616a6" class="cell" data-execution_count="5">
+<div id="300f4251" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># T-test on binary outcome (gave)</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>treat <span class="op">=</span> data[data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>][<span class="st">'gave'</span>]</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>control <span class="op">=</span> data[data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">0</span>][<span class="st">'gave'</span>]</span>
@@ -1380,7 +1380,7 @@ T-statistic: 3.209, p-value: 0.001</code></pre>
 <p>The result of the t-test yields a t-statistic of 3.209 with a p-value of 0.001. This indicates a statistically significant difference in donation rates between the treatment and control groups at the 1% significance level. In other words, individuals who received a matching donation offer were significantly more likely to donate than those who did not, supporting the hypothesis that such offers increase giving behavior.</p>
 <p>To complement the t-test, we estimate a simple ordinary least squares (OLS) regression to evaluate the effect of the treatment assignment on the probability of giving. The binary outcome variable <code>gave</code> is regressed on the treatment indicator, which equals 1 for those who received a matching donation offer and 0 for the control group.</p>
 <p>This model can be interpreted as a comparison of group means, where the intercept represents the donation rate in the control group, and the treatment coefficient captures the average difference in donation rates between groups.</p>
-<div id="1420c89c" class="cell" data-execution_count="6">
+<div id="ea22e181" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bivariate OLS regression: gave ~ treatment</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> smf.ols(<span class="st">"gave ~ treatment"</span>, data<span class="op">=</span>data).fit()</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>model.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1414,7 +1414,7 @@ T-statistic: 3.209, p-value: 0.001</code></pre>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">Time:</td>
-<td>21:44:33</td>
+<td>22:37:43</td>
 <td data-quarto-table-cell-role="th">Log-Likelihood:</td>
 <td>26630.</td>
 </tr>
@@ -1512,7 +1512,7 @@ T-statistic: 3.209, p-value: 0.001</code></pre>
 </div>
 <p>The results confirm what we observed in the t-test. The coefficient on the <code>treatment</code> variable is <strong>0.0042</strong>, with a <strong>p-value of 0.002</strong>, indicating that the difference in donation rates between treatment and control is statistically significant at the 1% level.</p>
 <p>This suggests that receiving a matching donation offer increased the likelihood of giving by approximately <strong>0.42 percentage points</strong>. While this effect may seem small in absolute terms, it is consistent with the behavioral insights from Karlan and List (2007): even modest framing changes like mentioning a match can lead to meaningful increases in donor participation.</p>
-<div id="da7ada46" class="cell" data-execution_count="7">
+<div id="f377710c" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Probit regression: gave ~ treatment</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>probit_model <span class="op">=</span> smf.probit(<span class="st">"gave ~ treatment"</span>, data<span class="op">=</span>data).fit()</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>probit_model.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1551,7 +1551,7 @@ T-statistic: 3.209, p-value: 0.001</code></pre>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">Time:</td>
-<td>21:44:34</td>
+<td>22:37:43</td>
 <td data-quarto-table-cell-role="th">Log-Likelihood:</td>
 <td>-5030.5</td>
 </tr>
@@ -1628,7 +1628,7 @@ T-statistic: 3.209, p-value: 0.001</code></pre>
 </section>
 <section id="t-tests-for-match-ratios" class="level3">
 <h3 class="anchored" data-anchor-id="t-tests-for-match-ratios">T-tests for Match Ratios</h3>
-<div id="c9fca414" class="cell" data-execution_count="8">
+<div id="c0bb4629" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter only treatment group and each match ratio</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ratio1 <span class="op">=</span> data[(data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>) <span class="op">&amp;</span> (data[<span class="st">'ratio'</span>] <span class="op">==</span> <span class="dv">1</span>)][<span class="st">'gave'</span>]</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>ratio2 <span class="op">=</span> data[(data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>) <span class="op">&amp;</span> (data[<span class="st">'ratio'</span>] <span class="op">==</span> <span class="dv">2</span>)][<span class="st">'gave'</span>]</span>
@@ -1659,7 +1659,7 @@ These t-tests compare donation rates for each match ratio within the treatment g
 </section>
 <section id="regression-on-match-ratio-categorical" class="level3">
 <h3 class="anchored" data-anchor-id="regression-on-match-ratio-categorical">Regression on Match Ratio (Categorical)</h3>
-<div id="26dce74b" class="cell" data-execution_count="9">
+<div id="1a1c269c" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for treatment group and valid match ratios</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>match_data <span class="op">=</span> data[(data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>) <span class="op">&amp;</span> (data[<span class="st">'ratio'</span>].isin([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]))].copy()</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1699,7 +1699,7 @@ These t-tests compare donation rates for each match ratio within the treatment g
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">Time:</td>
-<td>21:44:34</td>
+<td>22:37:44</td>
 <td data-quarto-table-cell-role="th">Log-Likelihood:</td>
 <td>16688.</td>
 </tr>
@@ -1815,7 +1815,7 @@ The regression estimates donation rates for each match ratio using the 1:1 match
 <hr>
 <section id="response-rate-differences-from-raw-data-and-model" class="level4">
 <h4 class="anchored" data-anchor-id="response-rate-differences-from-raw-data-and-model">Response Rate Differences from Raw Data and Model</h4>
-<div id="f75e9663" class="cell" data-execution_count="10">
+<div id="a620c90f" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Group-level mean donation rates</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>ratio1 <span class="op">=</span> data[(data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>) <span class="op">&amp;</span> (data[<span class="st">'ratio'</span>] <span class="op">==</span> <span class="dv">1</span>)][<span class="st">'gave'</span>]</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>ratio2 <span class="op">=</span> data[(data[<span class="st">'treatment'</span>] <span class="op">==</span> <span class="dv">1</span>) <span class="op">&amp;</span> (data[<span class="st">'ratio'</span>] <span class="op">==</span> <span class="dv">2</span>)][<span class="st">'gave'</span>]</span>
@@ -1840,7 +1840,7 @@ Response Rate 3:1 = 0.0227
 3:1 - 2:1 = 0.0001</code></pre>
 </div>
 </div>
-<div id="e73f55a0" class="cell" data-execution_count="11">
+<div id="ada01640" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model-based differences from regression coefficients</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>coef <span class="op">=</span> model.params</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1890,7 +1890,7 @@ Conclusion
 <section id="full-sample-regression" class="level3">
 <h3 class="anchored" data-anchor-id="full-sample-regression">Full Sample Regression</h3>
 <p>The first model regresses the donation amount (<code>amount</code>) on the treatment assignment across the entire sample, including non-donors (who are coded as 0 for amount). This allows us to assess the <strong>average treatment effect</strong> on giving across all individuals.</p>
-<div id="8d0c2fcd" class="cell" data-execution_count="12">
+<div id="fb341f0f" class="cell" data-execution_count="12">
 <div class="cell-output cell-output-display" data-execution_count="12">
 <table class="simpletable caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>OLS Regression Results</caption>
@@ -1921,7 +1921,7 @@ Conclusion
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">Time:</td>
-<td>21:44:34</td>
+<td>22:37:44</td>
 <td data-quarto-table-cell-role="th">Log-Likelihood:</td>
 <td>-1.7946e+05</td>
 </tr>
@@ -2024,7 +2024,7 @@ Conclusion
 <section id="regression-among-donors-only" class="level3">
 <h3 class="anchored" data-anchor-id="regression-among-donors-only">Regression Among Donors Only</h3>
 <p>Next, I restrict the sample to individuals who actually made a donation (<code>gave == 1</code>) to test whether the matching offer affected <strong>how much donors gave</strong>, conditional on donating.</p>
-<div id="9d1b9e4b" class="cell" data-execution_count="13">
+<div id="24ee2b6a" class="cell" data-execution_count="13">
 <div class="cell-output cell-output-display" data-execution_count="13">
 <table class="simpletable caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>OLS Regression Results</caption>
@@ -2055,7 +2055,7 @@ Conclusion
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">Time:</td>
-<td>21:44:34</td>
+<td>22:37:44</td>
 <td data-quarto-table-cell-role="th">Log-Likelihood:</td>
 <td>-5326.8</td>
 </tr>
@@ -2161,7 +2161,7 @@ Conclusion
 <p>Overall, this analysis supports the main takeaway from Karlan and List (2007): <strong>matching offers increase participation (extensive margin), but not the size of contributions (intensive margin)</strong>.</p>
 <section id="histogram-of-donation-amounts-treatment-group" class="level4">
 <h4 class="anchored" data-anchor-id="histogram-of-donation-amounts-treatment-group">Histogram of Donation Amounts: Treatment Group</h4>
-<div id="b259ce47" class="cell" data-execution_count="14">
+<div id="4f5acd3e" class="cell" data-execution_count="14">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -2173,7 +2173,7 @@ Conclusion
 </section>
 <section id="histogram-of-donation-amounts-control-group" class="level4">
 <h4 class="anchored" data-anchor-id="histogram-of-donation-amounts-control-group">Histogram of Donation Amounts: Control Group</h4>
-<div id="f7320efe" class="cell" data-message="false" data-execution_count="15">
+<div id="a7f0beb8" class="cell" data-message="false" data-execution_count="15">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -2220,7 +2220,7 @@ Conclusion
 </section>
 <section id="law-of-large-numbers-convergence-of-mean-difference" class="level3">
 <h3 class="anchored" data-anchor-id="law-of-large-numbers-convergence-of-mean-difference">Law of Large Numbers: Convergence of Mean Difference</h3>
-<div id="0048e82a" class="cell" data-message="false" data-execution_count="16">
+<div id="1cbac6c4" class="cell" data-message="false" data-execution_count="16">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -2246,7 +2246,7 @@ Conclusion
 <section id="central-limit-theorem" class="level3">
 <h3 class="anchored" data-anchor-id="central-limit-theorem">Central Limit Theorem</h3>
 <p>We simulate distributions of average differences in donation rates between control (p = 0.018) and treatment (p = 0.022) groups, using increasing sample sizes (n = 50, 200, 500, 1000). For each sample size, we repeat the process 1000 times and visualize the distribution of sample differences.</p>
-<div id="fd53d080" class="cell" data-message="false" data-execution_count="17">
+<div id="d1e86cc6" class="cell" data-message="false" data-execution_count="17">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
