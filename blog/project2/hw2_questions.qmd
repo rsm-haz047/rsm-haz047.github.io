@@ -1,6 +1,6 @@
 ---
 title: "Poisson Regression Examples"
-author: "Your Name"
+author: "Hanhua Zhu"
 date: today
 callout-appearance: minimal # this hides the blue "i" icon on .callout-notes
 ---
@@ -66,7 +66,7 @@ plt.show()
 ```{python}
 #| label: tbl-patents-summary
 #| tbl-cap: "Summary Statistics of Patents by Customer Status"
-#| echo: true
+#| echo: false
 #| warning: false
 #| message: false
 
@@ -696,7 +696,7 @@ summary_clean
 ```
 ```{python}
 #| label: summary-categoricals
-#| echo: true
+#| echo: false
 
 # Summarize categorical variables
 categorical_summary = df[["room_type", "instant_bookable"]].astype(str).describe().T
@@ -709,7 +709,7 @@ We present summary statistics for selected numeric variables that will be used i
 
 ```{python}
 #| label: airbnb-summary-numeric
-#| echo: true
+#| echo: false
 
 # Select only relevant numeric variables for modeling
 numeric_cols = [
@@ -736,6 +736,8 @@ numeric_summary
 ```{python}
 #| label: airbnb-eda
 #| echo: false
+#| warning: false
+#| message: false
 #| fig-cap: "Distribution of Number of Reviews"
 
 import seaborn as sns
@@ -760,6 +762,8 @@ The plot below shows the full distribution of review counts (a proxy for booking
 ```{python}
 #| label: plot-reviews-by-room-type
 #| fig-cap: "Distribution of Number of Reviews by Room Type"
+#| warning: false
+#| message: false
 #| echo: false
 
 import seaborn as sns
@@ -806,6 +810,8 @@ This scatter plot shows how review counts vary with listing price. Since price i
 ```{python}
 #| label: plot-reviews-vs-price
 #| fig-cap: "Review Counts vs. Listing Price"
+#| warning: false
+#| message: false
 #| echo: false
 
 import seaborn as sns
@@ -830,6 +836,8 @@ This plot explores whether longer-listed units tend to accumulate more reviews o
 ```{python}
 #| label: plot-reviews-vs-days
 #| fig-cap: "Review Counts vs. Days Listed"
+#| warning: false
+#| message: false
 #| echo: false
 
 plt.figure(figsize=(8, 5))
@@ -851,6 +859,8 @@ Boxplot comparing listings that are instantly bookable versus not. This can reve
 ```{python}
 #| label: boxplot-instant-bookable
 #| fig-cap: "Number of Reviews by Instant Bookable Status"
+#| warning: false
+#| message: false
 #| echo: false
 
 plt.figure(figsize=(8, 5))
@@ -871,6 +881,8 @@ This boxplot evaluates whether listings with higher cleanliness ratings tend to 
 ```{python}
 #| label: boxplot-cleanliness
 #| fig-cap: "Number of Reviews by Cleanliness Score"
+#| warning: false
+#| message: false
 #| echo: false
 
 plt.figure(figsize=(10, 5))
@@ -891,6 +903,8 @@ This count plot shows the volume of listings per room type. It provides useful c
 ```{python}
 #| label: count-room-type
 #| fig-cap: "Number of Listings by Room Type"
+#| warning: false
+#| message: false
 #| echo: false
 
 plt.figure(figsize=(7, 5))
@@ -933,6 +947,8 @@ We use a Poisson regression model to predict the number of reviews (a proxy for 
 ```{python}
 #| label: poisson-glm-final
 #| echo: true
+#| warning: false
+#| message: false
 
 import pandas as pd
 import numpy as np
