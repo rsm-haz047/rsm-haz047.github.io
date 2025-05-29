@@ -342,11 +342,11 @@ Where the two approaches differ is in how they quantify uncertainty. The MLE pro
 
 
 
-#### Trace Plot and Posterior Distribution for \( \beta_{\text{Netflix}} \)
+#### Trace Plot and Posterior Distribution for $\beta_{\text{Netflix}}$
 
 The trace plot below shows the sampled values of the Netflix coefficient across 10,000 iterations after burn-in. The values fluctuate randomly around a stable mean, with no visible trend or drift, indicating that the Markov Chain has converged and is mixing well. This suggests the sampler has thoroughly explored the posterior distribution.
 
-The histogram below presents the posterior distribution of \( \beta_{\text{Netflix}} \). It is unimodal and approximately symmetric, centered around a value of approximately 1.06. This confirms a strong and consistent consumer preference for Netflix over the baseline brand (Hulu), with relatively low posterior uncertainty.
+The histogram below presents the posterior distribution of . It is unimodal and approximately symmetric, centered around a value of approximately 1.06. This confirms a strong and consistent consumer preference for Netflix over the baseline brand (Hulu), with relatively low posterior uncertainty.
 
 Together, these visualizations validate both the stability of the MCMC algorithm and the strength of the inferred preference for Netflix.
 
@@ -467,42 +467,48 @@ The visual alignment of point estimates and interval ranges across methods reinf
 
 
 
-
 ## 6. Discussion
-
 
 #### Interpretation of Parameter Estimates Without Knowing the Data-Generating Process
 
 Suppose we did not know the data were simulated and simply observed the estimated coefficients. We would still be able to draw clear conclusions based on their magnitudes, signs, and associated uncertainty.
 
-First, we observe that \( \beta_\text{Netflix} > \beta_\text{Prime} \), indicating that consumers, on average, derive more utility from Netflix than from Amazon Prime, relative to the reference brand (Hulu). This ordering suggests that Netflix is the most preferred streaming option among the three brands included in the model. The positive value of each coefficient (relative to the reference) implies that both Netflix and Prime increase the likelihood of being chosen, with Netflix doing so more strongly.
+First, we observe that $\beta_{\text{Netflix}} > \beta_{\text{Prime}}$, indicating that consumers, on average, derive more utility from Netflix than from Amazon Prime, relative to the reference brand (Hulu). This ordering suggests that Netflix is the most preferred streaming option among the three brands included in the model. The positive value of each coefficient (relative to the reference) implies that both Netflix and Prime increase the likelihood of being chosen, with Netflix doing so more strongly.
 
-Second, the coefficient on **Price** (\( \beta_\text{price} \)) is clearly negative and statistically significant. This is consistent with economic intuition: as price increases, the overall utility of a product decreases, making it less likely to be chosen. The magnitude of this coefficient reflects the sensitivity of consumer choice to changes in price.
+Second, the coefficient on **Price** ($\beta_{\text{Price}}$) is clearly negative and statistically significant. This is consistent with economic intuition: as price increases, the overall utility of a product decreases, making it less likely to be chosen. The magnitude of this coefficient reflects the sensitivity of consumer choice to changes in price.
 
 Even without knowing the true data-generating process, these parameter estimates are interpretable and align with what we would expect from rational consumer behavior in a competitive choice environment. The fact that the model captures intuitive relationships—higher brand preference for Netflix and negative utility from higher prices—supports the validity of the estimation process.
 
+---
 
 #### High-Level Changes for a Hierarchical (Random-Parameter) Logit Model
 
-To move from a standard multinomial logit (MNL) model to a **multi-level** or **hierarchical** logit model, we must allow for **heterogeneity in preferences** across individuals. In the standard MNL model, all respondents share the same vector of utility coefficients \( \beta \). In contrast, the hierarchical model assumes that each individual \( i \) has their own coefficient vector \( \beta_i \), drawn from a common population distribution.
+To move from a standard multinomial logit (MNL) model to a **multi-level** or **hierarchical** logit model, we must allow for **heterogeneity in preferences** across individuals. In the standard MNL model, all respondents share the same vector of utility coefficients ($\beta$). In contrast, the hierarchical model assumes that each individual $i$ has their own coefficient vector $\beta_i$, drawn from a common population distribution.
 
 **To simulate data from a hierarchical MNL model**, the key change would be to:
-- Sample each individual's coefficient vector \( \beta_i \) from a distribution such as:
-  \[
+
+- Sample each individual's coefficient vector $\beta_i$ from a distribution such as:
+
+  $$
   \beta_i \sim \mathcal{N}(\mu, \Sigma)
-  \]
-  where \( \mu \) is the population mean vector and \( \Sigma \) is the covariance matrix capturing preference variability.
-- Use each respondent’s personal \( \beta_i \) to simulate their choices across tasks.
+  $$
+
+  where $\mu$ is the population mean vector and $\Sigma$ is the covariance matrix capturing preference variability.
+
+- Use each respondent’s personal $\beta_i$ to simulate their choices across tasks.
 
 This simulates more realistic, person-specific variation and is closer to what we observe in real-world conjoint applications.
 
+---
 
 **To estimate the parameters of a hierarchical MNL model**, we would need to:
-- Use **Bayesian methods** (such as Hierarchical Bayes) or **frequentist methods** (like simulated maximum likelihood).
-- Estimate both individual-level parameters \( \beta_i \) and hyperparameters \( \mu, \Sigma \).
-- Apply a sampling technique like Gibbs sampling or Metropolis-within-Gibbs to alternate between drawing \( \beta_i \) for each individual and updating the group-level parameters.
 
-This framework allows the model to capture richer insights, such as segments of users with distinct price sensitivity or brand preferences. It’s especially valuable for "real world" conjoint analysis where respondent heterogeneity is expected and meaningful for business decision-making.
+- Use **Bayesian methods** (such as Hierarchical Bayes) or **frequentist methods** (like simulated maximum likelihood).
+- Estimate both individual-level parameters ($\beta_i$) and hyperparameters ($\mu$, $\Sigma$).
+- Apply a sampling technique like **Gibbs sampling** or **Metropolis-within-Gibbs** to alternate between drawing $\beta_i$ for each individual and updating the group-level parameters.
+
+This framework allows the model to capture richer insights, such as segments of users with distinct price sensitivity or brand preferences. It’s especially valuable for **real-world conjoint analysis**, where respondent heterogeneity is expected and meaningful for business decision-making.
+
 
 
 

@@ -259,7 +259,7 @@ u_{ij} = (1 \times Netflix_j) + (0.5 \times Prime_j) + (-0.8*Ads_j) - 0.1\times 
 \]</span></p>
 <p>where the variables are binary indicators and <span class="math inline">\(\varepsilon\)</span> is Type 1 Extreme Value (ie, Gumble) distributed.</p>
 <p>The following code provides the simulation of the conjoint data.</p>
-<div id="08fc1536" class="cell" data-execution_count="1">
+<div id="5ffe43ec" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -391,7 +391,7 @@ u_{ij} = (1 \times Netflix_j) + (0.5 \times Prime_j) + (-0.8*Ads_j) - 0.1\times 
 <section id="preparing-the-data-for-estimation" class="level2">
 <h2 class="anchored" data-anchor-id="preparing-the-data-for-estimation">3. Preparing the Data for Estimation</h2>
 <p>The “hard part” of the MNL likelihood function is organizing the data, as we need to keep track of 3 dimensions (consumer <span class="math inline">\(i\)</span>, covariate <span class="math inline">\(k\)</span>, and product <span class="math inline">\(j\)</span>) instead of the typical 2 dimensions for cross-sectional regression models (consumer <span class="math inline">\(i\)</span> and covariate <span class="math inline">\(k\)</span>). The fact that each task for each respondent has the same number of alternatives (3) helps. In addition, we need to convert the categorical variables for brand and ads into binary variables.</p>
-<div id="491ecf53" class="cell" data-execution_count="2">
+<div id="f4127c55" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -487,7 +487,7 @@ u_{ij} = (1 \times Netflix_j) + (0.5 \times Prime_j) + (-0.8*Ads_j) - 0.1\times 
 </section>
 <section id="estimation-via-maximum-likelihood" class="level2">
 <h2 class="anchored" data-anchor-id="estimation-via-maximum-likelihood">4. Estimation via Maximum Likelihood</h2>
-<div id="a9d8feec" class="cell" data-execution_count="3">
+<div id="3d052b7c" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Design matrix and response</span></span>
@@ -519,7 +519,7 @@ u_{ij} = (1 \times Netflix_j) + (0.5 \times Prime_j) + (-0.8*Ads_j) - 0.1\times 
 <pre><code>-1098.6122886651074</code></pre>
 </div>
 </div>
-<div id="f935ed49" class="cell" data-execution_count="4">
+<div id="3e7cdcc6" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> minimize</span>
@@ -635,7 +635,7 @@ u_{ij} = (1 \times Netflix_j) + (0.5 \times Prime_j) + (-0.8*Ads_j) - 0.1\times 
 </section>
 <section id="estimation-via-bayesian-methods" class="level2">
 <h2 class="anchored" data-anchor-id="estimation-via-bayesian-methods">5. Estimation via Bayesian Methods</h2>
-<div id="414fbbd6" class="cell" data-execution_count="5">
+<div id="e700cbae" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -762,12 +762,12 @@ u_{ij} = (1 \times Netflix_j) + (0.5 \times Prime_j) + (-0.8*Ads_j) - 0.1\times 
 <p>Overall, the posterior distributions reinforce conclusions drawn from maximum likelihood estimation: consumers prefer Netflix and Prime over Hulu, dislike advertisements, and are price-sensitive. The credible intervals provide a more complete picture of uncertainty and are narrower due to the informative priors used in the Bayesian approach. These results can inform product positioning, pricing strategy, and bundling decisions in the context of subscription-based streaming services.</p>
 <p>The Bayesian posterior means are remarkably similar to the maximum likelihood estimates (MLEs), with differences in point estimates across all four parameters being minimal—generally within 0.01. For example, the estimated utility for the Netflix attribute is 1.061 in the Bayesian model compared to 1.057 in the MLE, while the Prime estimate is 0.480 versus 0.473. The coefficients for Ad and Price are also nearly identical across methods, with both approaches confirming that advertisements reduce utility and higher prices have a negative impact on choice likelihood. These similarities indicate that both methods capture the same underlying preference structure in the data.</p>
 <p>Where the two approaches differ is in how they quantify uncertainty. The MLE provides standard errors and relies on normal-based confidence intervals, whereas the Bayesian method incorporates prior beliefs and produces full posterior distributions, summarized using standard deviations and credible intervals. The Bayesian credible intervals, constructed from posterior quantiles, are generally comparable in width to the MLE confidence intervals but reflect slightly more stability due to the regularizing influence of the priors—especially noticeable in the price coefficient. Overall, both approaches yield consistent conclusions, but the Bayesian framework offers a richer representation of parameter uncertainty and allows for the integration of prior knowledge.</p>
-<section id="trace-plot-and-posterior-distribution-for-_" class="level4">
-<h4 class="anchored" data-anchor-id="trace-plot-and-posterior-distribution-for-_">Trace Plot and Posterior Distribution for ( _{} )</h4>
+<section id="trace-plot-and-posterior-distribution-for-beta_textnetflix" class="level4">
+<h4 class="anchored" data-anchor-id="trace-plot-and-posterior-distribution-for-beta_textnetflix">Trace Plot and Posterior Distribution for <span class="math inline">\(\beta_{\text{Netflix}}\)</span></h4>
 <p>The trace plot below shows the sampled values of the Netflix coefficient across 10,000 iterations after burn-in. The values fluctuate randomly around a stable mean, with no visible trend or drift, indicating that the Markov Chain has converged and is mixing well. This suggests the sampler has thoroughly explored the posterior distribution.</p>
-<p>The histogram below presents the posterior distribution of ( _{} ). It is unimodal and approximately symmetric, centered around a value of approximately 1.06. This confirms a strong and consistent consumer preference for Netflix over the baseline brand (Hulu), with relatively low posterior uncertainty.</p>
+<p>The histogram below presents the posterior distribution of . It is unimodal and approximately symmetric, centered around a value of approximately 1.06. This confirms a strong and consistent consumer preference for Netflix over the baseline brand (Hulu), with relatively low posterior uncertainty.</p>
 <p>Together, these visualizations validate both the stability of the MCMC algorithm and the strength of the inferred preference for Netflix.</p>
-<div id="40ced149" class="cell" data-execution_count="6">
+<div id="5034576c" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -788,7 +788,7 @@ u_{ij} = (1 \times Netflix_j) + (0.5 \times Prime_j) + (-0.8*Ads_j) - 0.1\times 
 <h4 class="anchored" data-anchor-id="posterior-summaries-from-the-bayesian-estimation">Posterior Summaries from the Bayesian Estimation</h4>
 <p>Using the Metropolis-Hastings MCMC algorithm, we sampled from the posterior distribution of the four model parameters: brand preferences for Netflix and Prime (relative to Hulu), ad tolerance, and price sensitivity. Below we report the posterior means, standard deviations, and 95% credible intervals for each parameter. These summaries are based on the retained 10,000 posterior draws after discarding the initial 1,000 iterations as burn-in.</p>
 <p>The credible intervals represent the range within which the true parameter values lie with 95% posterior probability, conditional on the model and priors. These results can be compared directly with the maximum likelihood estimates reported earlier to assess consistency across estimation methods.</p>
-<div id="46a8a825" class="cell" data-execution_count="7">
+<div id="54a67fa8" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display" data-execution_count="7">
 <div>
 
@@ -857,7 +857,7 @@ u_{ij} = (1 \times Netflix_j) + (0.5 \times Prime_j) + (-0.8*Ads_j) - 0.1\times 
 <section id="comparison-of-python-and-r-mle-estimates-with-95-confidence-intervals" class="level4">
 <h4 class="anchored" data-anchor-id="comparison-of-python-and-r-mle-estimates-with-95-confidence-intervals">Comparison of Python and R MLE Estimates with 95% Confidence Intervals</h4>
 <p>The figure below compares the MLE estimates for the four parameters obtained using Python and R, along with their 95% confidence intervals. This visual comparison helps confirm that the two estimation implementations yield consistent results across platforms.</p>
-<div id="fb9193df" class="cell" data-execution_count="8">
+<div id="be03e46b" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -874,17 +874,32 @@ u_{ij} = (1 \times Netflix_j) + (0.5 \times Prime_j) + (-0.8*Ads_j) - 0.1\times 
 <section id="interpretation-of-parameter-estimates-without-knowing-the-data-generating-process" class="level4">
 <h4 class="anchored" data-anchor-id="interpretation-of-parameter-estimates-without-knowing-the-data-generating-process">Interpretation of Parameter Estimates Without Knowing the Data-Generating Process</h4>
 <p>Suppose we did not know the data were simulated and simply observed the estimated coefficients. We would still be able to draw clear conclusions based on their magnitudes, signs, and associated uncertainty.</p>
-<p>First, we observe that ( <em> &gt; </em> ), indicating that consumers, on average, derive more utility from Netflix than from Amazon Prime, relative to the reference brand (Hulu). This ordering suggests that Netflix is the most preferred streaming option among the three brands included in the model. The positive value of each coefficient (relative to the reference) implies that both Netflix and Prime increase the likelihood of being chosen, with Netflix doing so more strongly.</p>
-<p>Second, the coefficient on <strong>Price</strong> (( _ )) is clearly negative and statistically significant. This is consistent with economic intuition: as price increases, the overall utility of a product decreases, making it less likely to be chosen. The magnitude of this coefficient reflects the sensitivity of consumer choice to changes in price.</p>
+<p>First, we observe that <span class="math inline">\(\beta_{\text{Netflix}} &gt; \beta_{\text{Prime}}\)</span>, indicating that consumers, on average, derive more utility from Netflix than from Amazon Prime, relative to the reference brand (Hulu). This ordering suggests that Netflix is the most preferred streaming option among the three brands included in the model. The positive value of each coefficient (relative to the reference) implies that both Netflix and Prime increase the likelihood of being chosen, with Netflix doing so more strongly.</p>
+<p>Second, the coefficient on <strong>Price</strong> (<span class="math inline">\(\beta_{\text{Price}}\)</span>) is clearly negative and statistically significant. This is consistent with economic intuition: as price increases, the overall utility of a product decreases, making it less likely to be chosen. The magnitude of this coefficient reflects the sensitivity of consumer choice to changes in price.</p>
 <p>Even without knowing the true data-generating process, these parameter estimates are interpretable and align with what we would expect from rational consumer behavior in a competitive choice environment. The fact that the model captures intuitive relationships—higher brand preference for Netflix and negative utility from higher prices—supports the validity of the estimation process.</p>
+<hr>
 </section>
 <section id="high-level-changes-for-a-hierarchical-random-parameter-logit-model" class="level4">
 <h4 class="anchored" data-anchor-id="high-level-changes-for-a-hierarchical-random-parameter-logit-model">High-Level Changes for a Hierarchical (Random-Parameter) Logit Model</h4>
-<p>To move from a standard multinomial logit (MNL) model to a <strong>multi-level</strong> or <strong>hierarchical</strong> logit model, we must allow for <strong>heterogeneity in preferences</strong> across individuals. In the standard MNL model, all respondents share the same vector of utility coefficients ( ). In contrast, the hierarchical model assumes that each individual ( i ) has their own coefficient vector ( _i ), drawn from a common population distribution.</p>
-<p><strong>To simulate data from a hierarchical MNL model</strong>, the key change would be to: - Sample each individual’s coefficient vector ( _i ) from a distribution such as: [ _i (, ) ] where ( ) is the population mean vector and ( ) is the covariance matrix capturing preference variability. - Use each respondent’s personal ( _i ) to simulate their choices across tasks.</p>
+<p>To move from a standard multinomial logit (MNL) model to a <strong>multi-level</strong> or <strong>hierarchical</strong> logit model, we must allow for <strong>heterogeneity in preferences</strong> across individuals. In the standard MNL model, all respondents share the same vector of utility coefficients (<span class="math inline">\(\beta\)</span>). In contrast, the hierarchical model assumes that each individual <span class="math inline">\(i\)</span> has their own coefficient vector <span class="math inline">\(\beta_i\)</span>, drawn from a common population distribution.</p>
+<p><strong>To simulate data from a hierarchical MNL model</strong>, the key change would be to:</p>
+<ul>
+<li><p>Sample each individual’s coefficient vector <span class="math inline">\(\beta_i\)</span> from a distribution such as:</p>
+<p><span class="math display">\[
+\beta_i \sim \mathcal{N}(\mu, \Sigma)
+\]</span></p>
+<p>where <span class="math inline">\(\mu\)</span> is the population mean vector and <span class="math inline">\(\Sigma\)</span> is the covariance matrix capturing preference variability.</p></li>
+<li><p>Use each respondent’s personal <span class="math inline">\(\beta_i\)</span> to simulate their choices across tasks.</p></li>
+</ul>
 <p>This simulates more realistic, person-specific variation and is closer to what we observe in real-world conjoint applications.</p>
-<p><strong>To estimate the parameters of a hierarchical MNL model</strong>, we would need to: - Use <strong>Bayesian methods</strong> (such as Hierarchical Bayes) or <strong>frequentist methods</strong> (like simulated maximum likelihood). - Estimate both individual-level parameters ( _i ) and hyperparameters ( , ). - Apply a sampling technique like Gibbs sampling or Metropolis-within-Gibbs to alternate between drawing ( _i ) for each individual and updating the group-level parameters.</p>
-<p>This framework allows the model to capture richer insights, such as segments of users with distinct price sensitivity or brand preferences. It’s especially valuable for “real world” conjoint analysis where respondent heterogeneity is expected and meaningful for business decision-making.</p>
+<hr>
+<p><strong>To estimate the parameters of a hierarchical MNL model</strong>, we would need to:</p>
+<ul>
+<li>Use <strong>Bayesian methods</strong> (such as Hierarchical Bayes) or <strong>frequentist methods</strong> (like simulated maximum likelihood).</li>
+<li>Estimate both individual-level parameters (<span class="math inline">\(\beta_i\)</span>) and hyperparameters (<span class="math inline">\(\mu\)</span>, <span class="math inline">\(\Sigma\)</span>).</li>
+<li>Apply a sampling technique like <strong>Gibbs sampling</strong> or <strong>Metropolis-within-Gibbs</strong> to alternate between drawing <span class="math inline">\(\beta_i\)</span> for each individual and updating the group-level parameters.</li>
+</ul>
+<p>This framework allows the model to capture richer insights, such as segments of users with distinct price sensitivity or brand preferences. It’s especially valuable for <strong>real-world conjoint analysis</strong>, where respondent heterogeneity is expected and meaningful for business decision-making.</p>
 
 
 </section>
