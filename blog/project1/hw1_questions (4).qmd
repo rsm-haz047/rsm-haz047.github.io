@@ -57,7 +57,7 @@ The match ratio flags (`ratio2`, `ratio3`) suggest roughly **equal allocation** 
 The table below provides descriptions for key variables in the dataset.
 
 
-#:::: {.callout-note collapse="true"}
+:::: {.callout-note collapse="true"}
 
 
 ##| Variable             | Description                                                         |
