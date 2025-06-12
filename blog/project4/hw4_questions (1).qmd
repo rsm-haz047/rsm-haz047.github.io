@@ -1,0 +1,527 @@
+---
+title: "K-Means Clustering"
+format: html
+jupyter: python3
+author: Hanhua Zhu
+date: 2025-06-11
+---
+
+
+
+## 1a. K-Means
+
+In this section, we implement the K-Means clustering algorithm from scratch and visualize the iterative steps it takes to converge. K-Means is an unsupervised learning algorithm that groups data into *k* clusters by minimizing the sum of squared distances between data points and their assigned cluster centroids.
+
+To demonstrate this, we use the **Palmer Penguins** dataset, focusing on two continuous numerical features: **bill length (mm)** and **flipper length (mm)**. These two variables are biologically meaningful and expected to produce distinguishable clusters based on species differences.
+
+After running our custom implementation, we visualize the clustering result and compare it to the output of Python’s built-in `KMeans` function to assess consistency and accuracy.
+
+### Step 1: Load and Prepare the Data
+
+We begin by loading the Palmer Penguins dataset and selecting the two numerical variables: **bill length** and **flipper length**. We standardize them to ensure fair distance calculations.
+```{python}
+#| label: load-and-standardize
+#| echo: true
+#| warning: false
+#| message: false
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.preprocessing import StandardScaler
+
+# Load and clean
+
+penguins = pd.read_csv("/Users/hanhuazhu/Desktop/mywebsite/blog/project4/palmer_penguins.csv")
+X = penguins[['bill_length_mm', 'flipper_length_mm']].dropna().values
+
+# Standardize
+X_scaled = StandardScaler().fit_transform(X)
+print("Data loaded and standardized. First 5 rows:")
+print(X_scaled[:5])
+```
+
+### Step 2: Initialize Random Centroids
+
+We randomly select `k` data points as the initial centroids. This step is critical, as poor initialization can affect clustering quality.
+
+```{python}
+#| label: init-centroids
+#| echo: false
+
+def initialize_centroids(X, k, seed=0):
+    np.random.seed(seed)
+    return X[np.random.choice(X.shape[0], size=k, replace=False)]
+
+initial_centroids = initialize_centroids(X_scaled, k=3)
+
+print("Initial Centroid Coordinates:")
+print(initial_centroids)
+
+# Visualize
+plt.figure(figsize=(6, 5))
+plt.scatter(X_scaled[:, 0], X_scaled[:, 1], alpha=0.4)
+plt.scatter(initial_centroids[:, 0], initial_centroids[:, 1], c='red', s=150, marker='X', label='Initial Centroids')
+plt.xlabel("Standardized Bill Length")
+plt.ylabel("Standardized Flipper Length")
+plt.title("Initial Centroid Placement")
+plt.legend()
+plt.grid(True)
+plt.show()
+```
+As we can see from the graph, the initial centroids (marked by red Xs) are scattered across distinct regions of the data cloud, which suggests a good starting point for the K-Means algorithm. Their placement roughly aligns with visible groupings in the standardized feature space of bill length and flipper length. This helps ensure that the algorithm can quickly begin assigning points to meaningful clusters, potentially leading to faster convergence and more accurate segmentation. However, it's important to note that random initialization can sometimes result in suboptimal clustering if centroids are poorly positioned, which is why techniques like k-means++ are often used in practice.
+
+
+### Step 3: Assign Points to Nearest Centroid
+
+Each point is assigned to the closest centroid using Euclidean distance. This defines the cluster membership for the current iteration.
+```{python}
+#| label: assign-clusters
+#| echo: false
+
+def assign_clusters(X, centroids):
+    distances = np.linalg.norm(X[:, None] - centroids, axis=2)
+    return np.argmin(distances, axis=1)
+
+labels = assign_clusters(X_scaled, initial_centroids)
+
+print(" Cluster assignments for first 10 points:")
+print(labels[:10])
+
+# Visualize
+plt.figure(figsize=(6, 5))
+sns.scatterplot(x=X_scaled[:, 0], y=X_scaled[:, 1], hue=labels, palette='Set2', s=60)
+plt.scatter(initial_centroids[:, 0], initial_centroids[:, 1], c='black', s=150, marker='X')
+plt.title("Initial Cluster Assignments")
+plt.xlabel("Standardized Bill Length")
+plt.ylabel("Standardized Flipper Length")
+plt.grid(True)
+plt.show()
+```
+
+As we can see from the graph, each data point has been assigned to the nearest initial centroid based on Euclidean distance, resulting in three distinct color-coded clusters. Despite using only the very first randomly selected centroids (shown as black Xs), the cluster boundaries already begin to reflect meaningful groupings in the data. Notably, the cluster labeled “2” (in purple) aligns with the upper-right region of the plot, while clusters “0” and “1” (green and orange) split the more densely packed lower-left region. This early clustering step sets the stage for iterative refinement, where centroids will shift and reassignments will occur to minimize within-cluster variation. The clear separation in certain regions suggests that the initial centroid placement was reasonably effective for kickstarting the K-Means process.
+
+### Step 4: Update Centroids
+
+Centroids are recalculated by averaging all points assigned to each cluster.
+
+```{python}
+#| label: update-centroids
+#| echo: false
+
+def update_centroids(X, labels, k):
+    return np.array([X[labels == i].mean(axis=0) for i in range(k)])
+
+updated_centroids = update_centroids(X_scaled, labels, k=3)
+
+print(" Updated Centroid Coordinates After One Iteration:")
+print(updated_centroids)
+
+# Plot updated centroids
+plt.figure(figsize=(6, 5))
+sns.scatterplot(x=X_scaled[:, 0], y=X_scaled[:, 1], hue=labels, palette='Set2', s=60)
+plt.scatter(updated_centroids[:, 0], updated_centroids[:, 1], c='blue', s=200, marker='X', label='Updated Centroids')
+plt.title("Centroids After First Update")
+plt.xlabel("Standardized Bill Length")
+plt.ylabel("Standardized Flipper Length")
+plt.legend()
+plt.grid(True)
+plt.show()
+```
+
+As we can see from the graph, the centroids have shifted significantly after the first update step in the K-Means algorithm. The blue X markers represent the new centroid positions, calculated as the mean of the points assigned to each cluster during the initial assignment. These updated centroids now lie closer to the centers of their respective data groupings, reflecting the algorithm’s attempt to better capture the natural structure of the dataset. This shift highlights how K-Means iteratively improves cluster accuracy by adjusting centroids to minimize within-cluster variation. The movement from the initial (black) to updated (blue) centroids is a key part of the convergence process that ultimately leads to stable and meaningful clustering.
+
+
+
+### Step 5: Full Iterative K-Means
+
+Now we combine the steps into a loop to run the full K-Means algorithm over multiple iterations until convergence.
+```{python}
+#| label: full-kmeans
+#| echo: true
+
+def custom_kmeans(X, k=3, max_iters=10, seed=0):
+    centroids = initialize_centroids(X, k, seed)
+    history = []
+
+    for i in range(max_iters):
+        labels = assign_clusters(X, centroids)
+        history.append((centroids.copy(), labels.copy()))
+        new_centroids = update_centroids(X, labels, k)
+
+        print(f"Iteration {i+1}")
+        print("Centroids:")
+        print(new_centroids)
+        print()
+
+        if np.allclose(new_centroids, centroids):
+            print("Converged.")
+            break
+        centroids = new_centroids
+
+    return centroids, labels, history
+
+final_centroids, final_labels, history = custom_kmeans(X_scaled, k=3)
+```
+As we can see from this section, the full iterative K-Means process refines the cluster centroids over multiple iterations, gradually improving their positions. The printed output on the right shows how the centroid coordinates evolve from iteration to iteration. Initially, the centroids move significantly, adjusting based on the new cluster assignments. By the third or fourth iteration, the changes become smaller, indicating that the centroids are stabilizing. This behavior reflects the algorithm’s convergence toward a local minimum, where subsequent updates no longer result in substantial shifts. The convergence condition used here — checking whether the new centroids are sufficiently close to the previous ones — ensures that the process stops when further improvements are negligible. Overall, this iterative loop effectively captures the core mechanics of K-Means and demonstrates how simple updates can lead to increasingly meaningful clustering.
+
+
+### Step 6: Visualize Iterations
+
+We plot how clusters evolve over the first 4 iterations.
+
+```{python}
+#| label: visualize-steps
+#| echo: true
+
+fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+axes = axes.flatten()
+
+for i in range(4):
+    centroids, labels = history[i]
+    ax = axes[i]
+    sns.scatterplot(x=X_scaled[:, 0], y=X_scaled[:, 1], hue=labels, palette='Set2', s=50, ax=ax, legend=False)
+    ax.scatter(centroids[:, 0], centroids[:, 1], c='black', s=150, marker='X')
+    ax.set_title(f"Iteration {i+1}")
+    ax.set_xlabel("Bill Length")
+    ax.set_ylabel("Flipper Length")
+    ax.grid(True)
+
+plt.tight_layout()
+plt.show()
+```
+
+As we can see from the four subplots, the K-Means clustering algorithm rapidly refines its cluster assignments and centroid positions during the initial iterations. In **Iteration 1**, the centroids (black Xs) are still close to their random starting points, and the cluster assignments reflect some overlap and misalignment. By **Iteration 2**, we observe a noticeable repositioning of centroids, and many data points have shifted to more appropriate clusters. The transition continues in **Iterations 3** and **4**, where clusters become more distinct and compact, and centroids migrate toward the true centers of the data groupings. This sequence of visualizations clearly demonstrates the power of iterative refinement in K-Means: even after just a few steps, the algorithm can uncover meaningful structure from initially random assumptions.
+
+### Step 7: Compare Custom vs. Built-in KMeans
+
+
+We now compare our implementation with scikit-learn’s built-in `KMeans`.
+
+```{python}
+#| label: compare-builtin
+#| echo: false
+
+from sklearn.cluster import KMeans
+from sklearn.metrics import adjusted_rand_score
+
+# Run sklearn KMeans
+sk_kmeans = KMeans(n_clusters=3, random_state=42).fit(X_scaled)
+sk_labels = sk_kmeans.labels_
+sk_centroids = sk_kmeans.cluster_centers_
+
+# Visual comparison side by side
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+# Custom
+sns.scatterplot(x=X_scaled[:, 0], y=X_scaled[:, 1], hue=final_labels, palette='Set2', s=50, ax=axes[0])
+axes[0].scatter(final_centroids[:, 0], final_centroids[:, 1], c='black', marker='X', s=150, label='Centroids')
+axes[0].set_title("Custom K-Means")
+axes[0].set_xlabel("Standardized Bill Length")
+axes[0].set_ylabel("Standardized Flipper Length")
+axes[0].legend()
+
+# sklearn
+sns.scatterplot(x=X_scaled[:, 0], y=X_scaled[:, 1], hue=sk_labels, palette='Set2', s=50, ax=axes[1])
+axes[1].scatter(sk_centroids[:, 0], sk_centroids[:, 1], c='red', marker='X', s=150, label='Centroids')
+axes[1].set_title("scikit-learn KMeans")
+axes[1].set_xlabel("Standardized Bill Length")
+axes[1].set_ylabel("Standardized Flipper Length")
+axes[1].legend()
+
+plt.tight_layout()
+plt.show()
+```
+As we can see from the side-by-side plots, both the custom K-Means implementation (left) and the scikit-learn version (right) identify similar underlying cluster structures in the dataset. Each cluster in both plots is color-coded and labeled, with centroids marked as Xs — black for the custom model and red for scikit-learn.
+
+While the exact label assignments may differ due to random initialization and the lack of enforced label matching between implementations, the overall groupings are visually consistent. Both methods successfully separate the data into three coherent clusters based on the standardized bill length and flipper length of the penguins.
+
+The consistency in centroid positions and cluster boundaries confirms that the custom algorithm behaves as expected and is a reliable reimplementation of the K-Means clustering approach.
+
+### Step 8: Adjusted Rand Index
+
+To quantify how similar our clustering is to the built-in one:
+
+```{python}
+#| label: compare-ari
+#| echo: true
+
+from sklearn.metrics import adjusted_rand_score
+
+# Compute Adjusted Rand Index (ARI)
+ari = adjusted_rand_score(sk_labels, final_labels)
+
+print(f"Adjusted Rand Index between custom and sklearn KMeans: {ari:.4f}")
+```
+
+The Adjusted Rand Index (ARI) score of **0.9048** indicates a very strong agreement between the cluster assignments generated by the custom K-Means implementation and those produced by scikit-learn’s built-in version. Since the ARI accounts for chance grouping, a value this close to 1.0 suggests that both methods identified nearly identical structure in the data. This confirms that the custom implementation is not only functional but closely replicates the behavior of a well-established library method.
+
+### Step 9: Cluster Evaluation with WCSS and Silhouette Scores
+```{python}
+#| label: evaluate-k
+#| echo: false
+#| warning: false
+
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+
+wcss = []
+silhouette = []
+K_range = range(2, 8)
+
+for k in K_range:
+    model = KMeans(n_clusters=k, random_state=42).fit(X_scaled)
+    wcss.append(model.inertia_)  # Sum of squared distances to closest centroid
+    silhouette.append(silhouette_score(X_scaled, model.labels_))
+
+# Plotting
+fig, ax = plt.subplots(1, 2, figsize=(12, 4))
+
+# WCSS (Elbow Method)
+ax[0].plot(K_range, wcss, marker='o')
+ax[0].set_title('Within-Cluster Sum of Squares (WCSS)')
+ax[0].set_xlabel('Number of Clusters (K)')
+ax[0].set_ylabel('WCSS')
+ax[0].grid(True)
+
+# Silhouette Score
+ax[1].plot(K_range, silhouette, marker='o', color='green')
+ax[1].set_title('Silhouette Score')
+ax[1].set_xlabel('Number of Clusters (K)')
+ax[1].set_ylabel('Silhouette Score')
+ax[1].grid(True)
+
+plt.tight_layout()
+plt.show()
+```
+
+Based on the Within-Cluster Sum of Squares (WCSS), the “elbow” appears at **K = 3**, suggesting that three clusters offer the best trade-off between compression and simplicity.
+
+The Silhouette Score is highest at **K = 2**, but only slightly higher than at **K = 3**. Since silhouette values remain reasonably strong for K=3 while dropping significantly afterward, K=3 still represents a robust choice that balances separation and interpretability.
+
+**Conclusion:** While K=2 has the highest silhouette score, **K=3 is the best overall choice** as supported by both the elbow method and the silhouette curve — and it aligns well with domain knowledge about penguin species grouping.
+
+```{python}
+#| label: animate-kmeans
+#| echo: true
+#| warning: false
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+import imageio
+
+filenames = []
+
+for i, (centroids, labels) in enumerate(history):
+    fig, ax = plt.subplots(figsize=(6, 5))
+    sns.scatterplot(x=X_scaled[:, 0], y=X_scaled[:, 1], hue=labels, palette='Set2', s=50, ax=ax, legend=False)
+    ax.scatter(centroids[:, 0], centroids[:, 1], c='black', s=150, marker='X')
+    ax.set_title(f"Iteration {i+1}")
+    ax.set_xlabel("Bill Length")
+    ax.set_ylabel("Flipper Length")
+    ax.grid(True)
+
+    filename = f"kmeans_iter_{i}.png"
+    filenames.append(filename)
+    plt.savefig(filename)
+    plt.close()
+
+# Create animated GIF
+with imageio.get_writer("kmeans_animation.gif", mode="I", duration=0.8) as writer:
+    for filename in filenames:
+        image = imageio.imread(filename)
+        writer.append_data(image)
+
+print("GIF saved as kmeans_animation.gif")
+```
+
+
+
+
+
+
+## 2a. K Nearest Neighbors
+
+To explore how the K-Nearest Neighbors (KNN) algorithm performs, we begin by generating a synthetic dataset with a non-linear classification boundary. The dataset includes two continuous features, `x1` and `x2`, and a binary target variable `y`, where `y` is determined by whether a point lies above or below a wiggly boundary defined by a sine function: `y = 1 if x2 > sin(4 * x1) + x1`, otherwise `0`. This setup results in a flexible, non-linear separation that is well-suited for demonstrating the strengths and limitations of KNN in capturing local decision patterns without requiring a parametric model.
+
+
+```{python}
+#| label: gen-wiggly-data
+#| echo: true
+
+import numpy as np
+import pandas as pd
+
+# Set seed
+np.random.seed(42)
+
+# Sample size
+n = 100
+
+# Generate features
+x1 = np.random.uniform(-3, 3, n)
+x2 = np.random.uniform(-3, 3, n)
+
+# Define the wiggly boundary
+boundary = np.sin(4 * x1) + x1
+
+# Binary classification based on boundary
+y = (x2 > boundary).astype(int)  # 1 if above the boundary, else 0
+```
+
+
+To visualize the synthetic classification task, we plot the generated data points along with the underlying wiggly decision boundary used to assign class labels. The horizontal axis represents `x1`, the vertical axis represents `x2`, and the class label `y` is indicated by color. Points above the boundary belong to class `1`, while those below are labeled as class `0`. This setup creates a challenging non-linear classification scenario that is well-suited to evaluating how K-Nearest Neighbors adapts to complex local structures.
+
+```{python}
+#| label: plot-wiggly-boundary
+#| fig-cap: "Synthetic Dataset with Wiggly Decision Boundary"
+#| echo: false
+# Combine into DataFrame
+df = pd.DataFrame({'x1': x1, 'x2': x2, 'y': y})
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+plt.figure(figsize=(6, 6))
+sns.scatterplot(data=df, x='x1', y='x2', hue='y', palette='Set1', s=40)
+plt.plot(np.sort(x1), np.sin(4 * np.sort(x1)) + np.sort(x1), color='black', linestyle='--', label='Boundary')
+plt.xlabel("x1")
+plt.ylabel("x2")
+plt.title("Synthetic Wiggly Decision Boundary")
+plt.legend()
+plt.grid(True)
+plt.show()
+
+
+```
+As shown in the plot, the decision boundary is defined by the function `x2 = sin(4 * x1) + x1`, which creates a highly non-linear separation between the two classes. The points colored red (`y=1`) lie above this boundary, and the points colored blue (`y=0`) lie below it. This visualization confirms that the synthetic dataset contains significant curvature and overlap, which will test KNN’s ability to adapt its decision boundaries based on local neighborhoods rather than relying on a global linear rule.
+
+
+### Generating a Separate Test Dataset
+To evaluate the performance of our K-Nearest Neighbors classifier, we generate a separate test dataset. This test set follows the same structure and decision boundary as the training data but is created using a different random seed to ensure that the points are independently sampled. By assessing model accuracy on this new data, we can determine how well KNN generalizes to unseen examples in a similarly distributed feature space.
+
+```{python}
+#| label: gen-knn-test-data
+#| echo: true
+
+import numpy as np
+import pandas as pd
+
+# Set a different seed for independent test data
+np.random.seed(24)
+
+# Sample size
+n_test = 100
+
+# Generate features
+x1_test = np.random.uniform(-3, 3, n_test)
+x2_test = np.random.uniform(-3, 3, n_test)
+
+# Define the wiggly boundary
+boundary_test = np.sin(4 * x1_test) + x1_test
+
+# Assign binary labels
+y_test = (x2_test > boundary_test).astype(int)
+
+# Create test DataFrame
+df_test = pd.DataFrame({'x1': x1_test, 'x2': x2_test, 'y': y_test})
+
+# Preview first few rows
+print("Preview of test dataset:")
+print(df_test.head())
+```
+
+
+### Implementing K-Nearest Neighbors by Hand
+To better understand how the K-Nearest Neighbors (KNN) algorithm works, we implement it from scratch using basic Python operations. This manual implementation allows us to see the underlying mechanics of distance-based classification and majority voting. After completing the custom implementation, we validate our results by comparing them to the output of scikit-learn’s `KNeighborsClassifier`, a widely used and optimized version of the algorithm.
+### Implementing K-Nearest Neighbors by Hand
+
+To deepen our understanding of how the K-Nearest Neighbors algorithm works, we implement it manually using only basic Python operations. This version computes Euclidean distances, finds the nearest neighbors, and performs majority voting for prediction. We then apply this implementation to the synthetic test dataset and print the predicted class labels.
+
+```{python}
+#| label: knn-by-hand
+#| echo: true
+
+import numpy as np
+from collections import Counter
+
+def euclidean_distance(p1, p2):
+    return np.sqrt(np.sum((p1 - p2)**2))
+
+def knn_predict(X_train, y_train, X_test, k=5):
+    predictions = []
+    for test_point in X_test:
+        distances = [euclidean_distance(test_point, x) for x in X_train]
+        k_indices = np.argsort(distances)[:k]
+        k_labels = [y_train[i] for i in k_indices]
+        majority = Counter(k_labels).most_common(1)[0][0]
+        predictions.append(majority)
+    return np.array(predictions)
+```
+
+### Predict with Manual KNN and Print Results
+
+```{python}
+#| label: knn-manual-predict
+#| echo: true
+
+# Prepare training and test matrices
+X_train = np.column_stack((x1, x2))
+y_train = y
+
+X_test_vals = np.column_stack((x1_test, x2_test))
+y_test_vals = y_test
+
+# Run manual KNN prediction
+y_pred_manual = knn_predict(X_train, y_train, X_test_vals, k=5)
+
+# Print results
+print("Manual KNN predictions (first 10):")
+print(y_pred_manual[:10])
+```
+The output above shows the first 10 predictions made by our manual K-Nearest Neighbors implementation. Each value corresponds to the predicted class label (`0` or `1`) for a test data point, based on the majority class among its 5 nearest neighbors in the training set. This confirms that the custom function is generating class predictions as expected, which can now be compared to the ground truth labels or validated against a standard library implementation.
+
+
+
+### Evaluating Accuracy Across K Values
+
+To determine the optimal number of neighbors for classification, we evaluate the accuracy of our manual KNN implementation across values of `k` from 1 to 30. For each `k`, we compute the percentage of correctly classified points in the test set and visualize the results. The goal is to identify which value of `k` yields the highest classification accuracy.
+
+```{python}
+#| label: knn-k-accuracy-plot
+#| echo: true
+
+import matplotlib.pyplot as plt
+
+k_values = range(1, 31)
+accuracies = []
+
+for k in k_values:
+    y_pred_k = knn_predict(X_train, y_train, X_test_vals, k=k)
+    accuracy = np.mean(y_pred_k == y_test_vals)
+    accuracies.append(accuracy * 100)
+
+# Plotting
+plt.figure(figsize=(8, 5))
+plt.plot(k_values, accuracies, marker='o')
+plt.title("KNN Accuracy vs. K Value")
+plt.xlabel("Number of Neighbors (k)")
+plt.ylabel("Accuracy (%)")
+plt.grid(True)
+plt.show()
+```
+
+```markdown
+The plot displays classification accuracy as a function of the number of neighbors used in KNN. The optimal `k` is the value that achieves the highest accuracy on the test dataset, providing the best generalization performance. This helps balance model complexity and prediction stability.
+
+Based on the accuracy plot, the optimal value of `k` is either **1 or 2**, as both yield the highest classification accuracy (~94%) on the test set. This suggests that very local decision boundaries perform best for this particular dataset.
+```
+
+
+
+
+
+
+
+
+

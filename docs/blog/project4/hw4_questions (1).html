@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.23">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Hanhua Zhu">
+<meta name="dcterms.date" content="2025-06-11">
+
+<title>K-Means Clustering – hanhuazhu’s website</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2d3a5f678c659c6d9658e8627949fb9f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">hanhuazhu’s website</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../resume.html"> 
+<span class="menu-text">My Resume</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">Projects</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#a.-k-means" id="toc-a.-k-means" class="nav-link active" data-scroll-target="#a.-k-means">1a. K-Means</a>
+  <ul class="collapse">
+  <li><a href="#step-1-load-and-prepare-the-data" id="toc-step-1-load-and-prepare-the-data" class="nav-link" data-scroll-target="#step-1-load-and-prepare-the-data">Step 1: Load and Prepare the Data</a></li>
+  <li><a href="#step-2-initialize-random-centroids" id="toc-step-2-initialize-random-centroids" class="nav-link" data-scroll-target="#step-2-initialize-random-centroids">Step 2: Initialize Random Centroids</a></li>
+  <li><a href="#step-3-assign-points-to-nearest-centroid" id="toc-step-3-assign-points-to-nearest-centroid" class="nav-link" data-scroll-target="#step-3-assign-points-to-nearest-centroid">Step 3: Assign Points to Nearest Centroid</a></li>
+  <li><a href="#step-4-update-centroids" id="toc-step-4-update-centroids" class="nav-link" data-scroll-target="#step-4-update-centroids">Step 4: Update Centroids</a></li>
+  <li><a href="#step-5-full-iterative-k-means" id="toc-step-5-full-iterative-k-means" class="nav-link" data-scroll-target="#step-5-full-iterative-k-means">Step 5: Full Iterative K-Means</a></li>
+  <li><a href="#step-6-visualize-iterations" id="toc-step-6-visualize-iterations" class="nav-link" data-scroll-target="#step-6-visualize-iterations">Step 6: Visualize Iterations</a></li>
+  <li><a href="#step-7-compare-custom-vs.-built-in-kmeans" id="toc-step-7-compare-custom-vs.-built-in-kmeans" class="nav-link" data-scroll-target="#step-7-compare-custom-vs.-built-in-kmeans">Step 7: Compare Custom vs.&nbsp;Built-in KMeans</a></li>
+  <li><a href="#step-8-adjusted-rand-index" id="toc-step-8-adjusted-rand-index" class="nav-link" data-scroll-target="#step-8-adjusted-rand-index">Step 8: Adjusted Rand Index</a></li>
+  <li><a href="#step-9-cluster-evaluation-with-wcss-and-silhouette-scores" id="toc-step-9-cluster-evaluation-with-wcss-and-silhouette-scores" class="nav-link" data-scroll-target="#step-9-cluster-evaluation-with-wcss-and-silhouette-scores">Step 9: Cluster Evaluation with WCSS and Silhouette Scores</a></li>
+  </ul></li>
+  <li><a href="#a.-k-nearest-neighbors" id="toc-a.-k-nearest-neighbors" class="nav-link" data-scroll-target="#a.-k-nearest-neighbors">2a. K Nearest Neighbors</a>
+  <ul class="collapse">
+  <li><a href="#generating-a-separate-test-dataset" id="toc-generating-a-separate-test-dataset" class="nav-link" data-scroll-target="#generating-a-separate-test-dataset">Generating a Separate Test Dataset</a></li>
+  <li><a href="#implementing-k-nearest-neighbors-by-hand" id="toc-implementing-k-nearest-neighbors-by-hand" class="nav-link" data-scroll-target="#implementing-k-nearest-neighbors-by-hand">Implementing K-Nearest Neighbors by Hand</a></li>
+  <li><a href="#predict-with-manual-knn-and-print-results" id="toc-predict-with-manual-knn-and-print-results" class="nav-link" data-scroll-target="#predict-with-manual-knn-and-print-results">Predict with Manual KNN and Print Results</a></li>
+  <li><a href="#evaluating-accuracy-across-k-values" id="toc-evaluating-accuracy-across-k-values" class="nav-link" data-scroll-target="#evaluating-accuracy-across-k-values">Evaluating Accuracy Across K Values</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">K-Means Clustering</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Hanhua Zhu </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 11, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="a.-k-means" class="level2">
+<h2 class="anchored" data-anchor-id="a.-k-means">1a. K-Means</h2>
+<p>In this section, we implement the K-Means clustering algorithm from scratch and visualize the iterative steps it takes to converge. K-Means is an unsupervised learning algorithm that groups data into <em>k</em> clusters by minimizing the sum of squared distances between data points and their assigned cluster centroids.</p>
+<p>To demonstrate this, we use the <strong>Palmer Penguins</strong> dataset, focusing on two continuous numerical features: <strong>bill length (mm)</strong> and <strong>flipper length (mm)</strong>. These two variables are biologically meaningful and expected to produce distinguishable clusters based on species differences.</p>
+<p>After running our custom implementation, we visualize the clustering result and compare it to the output of Python’s built-in <code>KMeans</code> function to assess consistency and accuracy.</p>
+<section id="step-1-load-and-prepare-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-load-and-prepare-the-data">Step 1: Load and Prepare the Data</h3>
+<p>We begin by loading the Palmer Penguins dataset and selecting the two numerical variables: <strong>bill length</strong> and <strong>flipper length</strong>. We standardize them to ensure fair distance calculations.</p>
+<div id="load-and-standardize" class="cell" data-message="false" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Load and clean</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>penguins <span class="op">=</span> pd.read_csv(<span class="st">"/Users/hanhuazhu/Desktop/mywebsite/blog/project4/palmer_penguins.csv"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> penguins[[<span class="st">'bill_length_mm'</span>, <span class="st">'flipper_length_mm'</span>]].dropna().values</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardize</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>X_scaled <span class="op">=</span> StandardScaler().fit_transform(X)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Data loaded and standardized. First 5 rows:"</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X_scaled[:<span class="dv">5</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data loaded and standardized. First 5 rows:
+[[-0.89604189 -1.42675157]
+ [-0.82278787 -1.06947358]
+ [-0.67627982 -0.42637319]
+ [-1.33556603 -0.56928439]
+ [-0.85941488 -0.78365118]]</code></pre>
+</div>
+</div>
+</section>
+<section id="step-2-initialize-random-centroids" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-initialize-random-centroids">Step 2: Initialize Random Centroids</h3>
+<p>We randomly select <code>k</code> data points as the initial centroids. This step is critical, as poor initialization can affect clustering quality.</p>
+<div id="cell-init-centroids" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-stdout">
+<pre><code>Initial Centroid Coordinates:
+[[-1.17074448 -1.14092917]
+ [-1.51870109 -1.14092917]
+ [ 1.41145984 -0.49782879]]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hw4_questions (1)_files/figure-html/init-centroids-output-2.png" id="init-centroids" width="513" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As we can see from the graph, the initial centroids (marked by red Xs) are scattered across distinct regions of the data cloud, which suggests a good starting point for the K-Means algorithm. Their placement roughly aligns with visible groupings in the standardized feature space of bill length and flipper length. This helps ensure that the algorithm can quickly begin assigning points to meaningful clusters, potentially leading to faster convergence and more accurate segmentation. However, it’s important to note that random initialization can sometimes result in suboptimal clustering if centroids are poorly positioned, which is why techniques like k-means++ are often used in practice.</p>
+</section>
+<section id="step-3-assign-points-to-nearest-centroid" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-assign-points-to-nearest-centroid">Step 3: Assign Points to Nearest Centroid</h3>
+<p>Each point is assigned to the closest centroid using Euclidean distance. This defines the cluster membership for the current iteration.</p>
+<div id="cell-assign-clusters" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-stdout">
+<pre><code> Cluster assignments for first 10 points:
+[0 0 0 0 0 0 0 0 0 1]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hw4_questions (1)_files/figure-html/assign-clusters-output-2.png" id="assign-clusters" width="513" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As we can see from the graph, each data point has been assigned to the nearest initial centroid based on Euclidean distance, resulting in three distinct color-coded clusters. Despite using only the very first randomly selected centroids (shown as black Xs), the cluster boundaries already begin to reflect meaningful groupings in the data. Notably, the cluster labeled “2” (in purple) aligns with the upper-right region of the plot, while clusters “0” and “1” (green and orange) split the more densely packed lower-left region. This early clustering step sets the stage for iterative refinement, where centroids will shift and reassignments will occur to minimize within-cluster variation. The clear separation in certain regions suggests that the initial centroid placement was reasonably effective for kickstarting the K-Means process.</p>
+</section>
+<section id="step-4-update-centroids" class="level3">
+<h3 class="anchored" data-anchor-id="step-4-update-centroids">Step 4: Update Centroids</h3>
+<p>Centroids are recalculated by averaging all points assigned to each cluster.</p>
+<div id="cell-update-centroids" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-stdout">
+<pre><code> Updated Centroid Coordinates After One Iteration:
+[[-0.7603627  -0.72772941]
+ [-1.56945566 -0.88981379]
+ [ 0.77799267  0.62749926]]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hw4_questions (1)_files/figure-html/update-centroids-output-2.png" id="update-centroids" width="513" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As we can see from the graph, the centroids have shifted significantly after the first update step in the K-Means algorithm. The blue X markers represent the new centroid positions, calculated as the mean of the points assigned to each cluster during the initial assignment. These updated centroids now lie closer to the centers of their respective data groupings, reflecting the algorithm’s attempt to better capture the natural structure of the dataset. This shift highlights how K-Means iteratively improves cluster accuracy by adjusting centroids to minimize within-cluster variation. The movement from the initial (black) to updated (blue) centroids is a key part of the convergence process that ultimately leads to stable and meaningful clustering.</p>
+</section>
+<section id="step-5-full-iterative-k-means" class="level3">
+<h3 class="anchored" data-anchor-id="step-5-full-iterative-k-means">Step 5: Full Iterative K-Means</h3>
+<p>Now we combine the steps into a loop to run the full K-Means algorithm over multiple iterations until convergence.</p>
+<div id="full-kmeans" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> custom_kmeans(X, k<span class="op">=</span><span class="dv">3</span>, max_iters<span class="op">=</span><span class="dv">10</span>, seed<span class="op">=</span><span class="dv">0</span>):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    centroids <span class="op">=</span> initialize_centroids(X, k, seed)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    history <span class="op">=</span> []</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(max_iters):</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        labels <span class="op">=</span> assign_clusters(X, centroids)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        history.append((centroids.copy(), labels.copy()))</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        new_centroids <span class="op">=</span> update_centroids(X, labels, k)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Iteration </span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Centroids:"</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(new_centroids)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>()</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> np.allclose(new_centroids, centroids):</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="st">"Converged."</span>)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>        centroids <span class="op">=</span> new_centroids</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> centroids, labels, history</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>final_centroids, final_labels, history <span class="op">=</span> custom_kmeans(X_scaled, k<span class="op">=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration 1
+Centroids:
+[[-0.7603627  -0.72772941]
+ [-1.56945566 -0.88981379]
+ [ 0.77799267  0.62749926]]
+
+Iteration 2
+Centroids:
+[[-0.53323649 -0.70962061]
+ [-1.45566036 -0.98839896]
+ [ 0.79343288  0.76567431]]
+
+Iteration 3
+Centroids:
+[[-0.38273033 -0.64837117]
+ [-1.35738065 -0.97910326]
+ [ 0.8131056   0.82321761]]
+
+Iteration 4
+Centroids:
+[[-0.23449222 -0.6062165 ]
+ [-1.26705197 -0.96018854]
+ [ 0.80861148  0.85263707]]
+
+Iteration 5
+Centroids:
+[[-0.08274572 -0.57961532]
+ [-1.21690977 -0.93326134]
+ [ 0.80318982  0.89416338]]
+
+Iteration 6
+Centroids:
+[[ 0.07754986 -0.53534298]
+ [-1.1710933  -0.92724291]
+ [ 0.78892438  0.94721584]]
+
+Iteration 7
+Centroids:
+[[ 0.25288963 -0.48466592]
+ [-1.11962591 -0.91351397]
+ [ 0.77138991  0.99921631]]
+
+Iteration 8
+Centroids:
+[[ 0.42918998 -0.43750913]
+ [-1.08593193 -0.89552019]
+ [ 0.7420602   1.06672886]]
+
+Iteration 9
+Centroids:
+[[ 0.59322179 -0.38056832]
+ [-1.05399588 -0.88469387]
+ [ 0.69795412  1.12539483]]
+
+Iteration 10
+Centroids:
+[[ 0.75243157 -0.3911486 ]
+ [-1.01561831 -0.84617483]
+ [ 0.67223372  1.1337407 ]]
+</code></pre>
+</div>
+</div>
+<p>As we can see from this section, the full iterative K-Means process refines the cluster centroids over multiple iterations, gradually improving their positions. The printed output on the right shows how the centroid coordinates evolve from iteration to iteration. Initially, the centroids move significantly, adjusting based on the new cluster assignments. By the third or fourth iteration, the changes become smaller, indicating that the centroids are stabilizing. This behavior reflects the algorithm’s convergence toward a local minimum, where subsequent updates no longer result in substantial shifts. The convergence condition used here — checking whether the new centroids are sufficiently close to the previous ones — ensures that the process stops when further improvements are negligible. Overall, this iterative loop effectively captures the core mechanics of K-Means and demonstrates how simple updates can lead to increasingly meaningful clustering.</p>
+</section>
+<section id="step-6-visualize-iterations" class="level3">
+<h3 class="anchored" data-anchor-id="step-6-visualize-iterations">Step 6: Visualize Iterations</h3>
+<p>We plot how clusters evolve over the first 4 iterations.</p>
+<div id="cell-visualize-steps" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">10</span>))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>axes <span class="op">=</span> axes.flatten()</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>):</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    centroids, labels <span class="op">=</span> history[i]</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    ax <span class="op">=</span> axes[i]</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    sns.scatterplot(x<span class="op">=</span>X_scaled[:, <span class="dv">0</span>], y<span class="op">=</span>X_scaled[:, <span class="dv">1</span>], hue<span class="op">=</span>labels, palette<span class="op">=</span><span class="st">'Set2'</span>, s<span class="op">=</span><span class="dv">50</span>, ax<span class="op">=</span>ax, legend<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    ax.scatter(centroids[:, <span class="dv">0</span>], centroids[:, <span class="dv">1</span>], c<span class="op">=</span><span class="st">'black'</span>, s<span class="op">=</span><span class="dv">150</span>, marker<span class="op">=</span><span class="st">'X'</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"Iteration </span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Bill Length"</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">"Flipper Length"</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    ax.grid(<span class="va">True</span>)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hw4_questions (1)_files/figure-html/visualize-steps-output-1.png" id="visualize-steps" width="1142" height="950" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As we can see from the four subplots, the K-Means clustering algorithm rapidly refines its cluster assignments and centroid positions during the initial iterations. In <strong>Iteration 1</strong>, the centroids (black Xs) are still close to their random starting points, and the cluster assignments reflect some overlap and misalignment. By <strong>Iteration 2</strong>, we observe a noticeable repositioning of centroids, and many data points have shifted to more appropriate clusters. The transition continues in <strong>Iterations 3</strong> and <strong>4</strong>, where clusters become more distinct and compact, and centroids migrate toward the true centers of the data groupings. This sequence of visualizations clearly demonstrates the power of iterative refinement in K-Means: even after just a few steps, the algorithm can uncover meaningful structure from initially random assumptions.</p>
+</section>
+<section id="step-7-compare-custom-vs.-built-in-kmeans" class="level3">
+<h3 class="anchored" data-anchor-id="step-7-compare-custom-vs.-built-in-kmeans">Step 7: Compare Custom vs.&nbsp;Built-in KMeans</h3>
+<p>We now compare our implementation with scikit-learn’s built-in <code>KMeans</code>.</p>
+<div id="cell-compare-builtin" class="cell" data-execution_count="7">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hw4_questions (1)_files/figure-html/compare-builtin-output-1.png" id="compare-builtin" width="1142" height="470" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As we can see from the side-by-side plots, both the custom K-Means implementation (left) and the scikit-learn version (right) identify similar underlying cluster structures in the dataset. Each cluster in both plots is color-coded and labeled, with centroids marked as Xs — black for the custom model and red for scikit-learn.</p>
+<p>While the exact label assignments may differ due to random initialization and the lack of enforced label matching between implementations, the overall groupings are visually consistent. Both methods successfully separate the data into three coherent clusters based on the standardized bill length and flipper length of the penguins.</p>
+<p>The consistency in centroid positions and cluster boundaries confirms that the custom algorithm behaves as expected and is a reliable reimplementation of the K-Means clustering approach.</p>
+</section>
+<section id="step-8-adjusted-rand-index" class="level3">
+<h3 class="anchored" data-anchor-id="step-8-adjusted-rand-index">Step 8: Adjusted Rand Index</h3>
+<p>To quantify how similar our clustering is to the built-in one:</p>
+<div id="compare-ari" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> adjusted_rand_score</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute Adjusted Rand Index (ARI)</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>ari <span class="op">=</span> adjusted_rand_score(sk_labels, final_labels)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Adjusted Rand Index between custom and sklearn KMeans: </span><span class="sc">{</span>ari<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Adjusted Rand Index between custom and sklearn KMeans: 0.9048</code></pre>
+</div>
+</div>
+<p>The Adjusted Rand Index (ARI) score of <strong>0.9048</strong> indicates a very strong agreement between the cluster assignments generated by the custom K-Means implementation and those produced by scikit-learn’s built-in version. Since the ARI accounts for chance grouping, a value this close to 1.0 suggests that both methods identified nearly identical structure in the data. This confirms that the custom implementation is not only functional but closely replicates the behavior of a well-established library method.</p>
+</section>
+<section id="step-9-cluster-evaluation-with-wcss-and-silhouette-scores" class="level3">
+<h3 class="anchored" data-anchor-id="step-9-cluster-evaluation-with-wcss-and-silhouette-scores">Step 9: Cluster Evaluation with WCSS and Silhouette Scores</h3>
+<div id="cell-evaluate-k" class="cell" data-execution_count="9">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hw4_questions (1)_files/figure-html/evaluate-k-output-1.png" id="evaluate-k" width="1142" height="374" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Based on the Within-Cluster Sum of Squares (WCSS), the “elbow” appears at <strong>K = 3</strong>, suggesting that three clusters offer the best trade-off between compression and simplicity.</p>
+<p>The Silhouette Score is highest at <strong>K = 2</strong>, but only slightly higher than at <strong>K = 3</strong>. Since silhouette values remain reasonably strong for K=3 while dropping significantly afterward, K=3 still represents a robust choice that balances separation and interpretability.</p>
+<p><strong>Conclusion:</strong> While K=2 has the highest silhouette score, <strong>K=3 is the best overall choice</strong> as supported by both the elbow method and the silhouette curve — and it aligns well with domain knowledge about penguin species grouping.</p>
+<div id="animate-kmeans" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imageio</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>filenames <span class="op">=</span> []</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, (centroids, labels) <span class="kw">in</span> <span class="bu">enumerate</span>(history):</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">5</span>))</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    sns.scatterplot(x<span class="op">=</span>X_scaled[:, <span class="dv">0</span>], y<span class="op">=</span>X_scaled[:, <span class="dv">1</span>], hue<span class="op">=</span>labels, palette<span class="op">=</span><span class="st">'Set2'</span>, s<span class="op">=</span><span class="dv">50</span>, ax<span class="op">=</span>ax, legend<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    ax.scatter(centroids[:, <span class="dv">0</span>], centroids[:, <span class="dv">1</span>], c<span class="op">=</span><span class="st">'black'</span>, s<span class="op">=</span><span class="dv">150</span>, marker<span class="op">=</span><span class="st">'X'</span>)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"Iteration </span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Bill Length"</span>)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">"Flipper Length"</span>)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    ax.grid(<span class="va">True</span>)</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    filename <span class="op">=</span> <span class="ss">f"kmeans_iter_</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">.png"</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    filenames.append(filename)</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    plt.savefig(filename)</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>    plt.close()</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Create animated GIF</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> imageio.get_writer(<span class="st">"kmeans_animation.gif"</span>, mode<span class="op">=</span><span class="st">"I"</span>, duration<span class="op">=</span><span class="fl">0.8</span>) <span class="im">as</span> writer:</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> filename <span class="kw">in</span> filenames:</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>        image <span class="op">=</span> imageio.imread(filename)</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>        writer.append_data(image)</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"GIF saved as kmeans_animation.gif"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>GIF saved as kmeans_animation.gif</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="a.-k-nearest-neighbors" class="level2">
+<h2 class="anchored" data-anchor-id="a.-k-nearest-neighbors">2a. K Nearest Neighbors</h2>
+<p>To explore how the K-Nearest Neighbors (KNN) algorithm performs, we begin by generating a synthetic dataset with a non-linear classification boundary. The dataset includes two continuous features, <code>x1</code> and <code>x2</code>, and a binary target variable <code>y</code>, where <code>y</code> is determined by whether a point lies above or below a wiggly boundary defined by a sine function: <code>y = 1 if x2 &gt; sin(4 * x1) + x1</code>, otherwise <code>0</code>. This setup results in a flexible, non-linear separation that is well-suited for demonstrating the strengths and limitations of KNN in capturing local decision patterns without requiring a parametric model.</p>
+<div id="gen-wiggly-data" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seed</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample size</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate features</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>x1 <span class="op">=</span> np.random.uniform(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>, n)</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>x2 <span class="op">=</span> np.random.uniform(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>, n)</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the wiggly boundary</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>boundary <span class="op">=</span> np.sin(<span class="dv">4</span> <span class="op">*</span> x1) <span class="op">+</span> x1</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Binary classification based on boundary</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> (x2 <span class="op">&gt;</span> boundary).astype(<span class="bu">int</span>)  <span class="co"># 1 if above the boundary, else 0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To visualize the synthetic classification task, we plot the generated data points along with the underlying wiggly decision boundary used to assign class labels. The horizontal axis represents <code>x1</code>, the vertical axis represents <code>x2</code>, and the class label <code>y</code> is indicated by color. Points above the boundary belong to class <code>1</code>, while those below are labeled as class <code>0</code>. This setup creates a challenging non-linear classification scenario that is well-suited to evaluating how K-Nearest Neighbors adapts to complex local structures.</p>
+<div id="cell-plot-wiggly-boundary" class="cell" data-execution_count="12">
+<div class="cell-output cell-output-display">
+<div id="plot-wiggly-boundary" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="hw4_questions (1)_files/figure-html/plot-wiggly-boundary-output-1.png" width="513" height="523" class="figure-img"></p>
+<figcaption>Synthetic Dataset with Wiggly Decision Boundary</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>As shown in the plot, the decision boundary is defined by the function <code>x2 = sin(4 * x1) + x1</code>, which creates a highly non-linear separation between the two classes. The points colored red (<code>y=1</code>) lie above this boundary, and the points colored blue (<code>y=0</code>) lie below it. This visualization confirms that the synthetic dataset contains significant curvature and overlap, which will test KNN’s ability to adapt its decision boundaries based on local neighborhoods rather than relying on a global linear rule.</p>
+<section id="generating-a-separate-test-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="generating-a-separate-test-dataset">Generating a Separate Test Dataset</h3>
+<p>To evaluate the performance of our K-Nearest Neighbors classifier, we generate a separate test dataset. This test set follows the same structure and decision boundary as the training data but is created using a different random seed to ensure that the points are independently sampled. By assessing model accuracy on this new data, we can determine how well KNN generalizes to unseen examples in a similarly distributed feature space.</p>
+<div id="gen-knn-test-data" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Set a different seed for independent test data</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">24</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample size</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>n_test <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate features</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>x1_test <span class="op">=</span> np.random.uniform(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>, n_test)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>x2_test <span class="op">=</span> np.random.uniform(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>, n_test)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the wiggly boundary</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>boundary_test <span class="op">=</span> np.sin(<span class="dv">4</span> <span class="op">*</span> x1_test) <span class="op">+</span> x1_test</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign binary labels</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>y_test <span class="op">=</span> (x2_test <span class="op">&gt;</span> boundary_test).astype(<span class="bu">int</span>)</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Create test DataFrame</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>df_test <span class="op">=</span> pd.DataFrame({<span class="st">'x1'</span>: x1_test, <span class="st">'x2'</span>: x2_test, <span class="st">'y'</span>: y_test})</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Preview first few rows</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Preview of test dataset:"</span>)</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_test.head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Preview of test dataset:
+         x1        x2  y
+0  2.760104  1.614976  0
+1  1.197072 -0.152494  0
+2  2.999204  0.114679  0
+3 -1.679596  2.665158  1
+4 -0.833662  0.861152  1</code></pre>
+</div>
+</div>
+</section>
+<section id="implementing-k-nearest-neighbors-by-hand" class="level3">
+<h3 class="anchored" data-anchor-id="implementing-k-nearest-neighbors-by-hand">Implementing K-Nearest Neighbors by Hand</h3>
+<p>To better understand how the K-Nearest Neighbors (KNN) algorithm works, we implement it from scratch using basic Python operations. This manual implementation allows us to see the underlying mechanics of distance-based classification and majority voting. After completing the custom implementation, we validate our results by comparing them to the output of scikit-learn’s <code>KNeighborsClassifier</code>, a widely used and optimized version of the algorithm. ### Implementing K-Nearest Neighbors by Hand</p>
+<p>To deepen our understanding of how the K-Nearest Neighbors algorithm works, we implement it manually using only basic Python operations. This version computes Euclidean distances, finds the nearest neighbors, and performs majority voting for prediction. We then apply this implementation to the synthetic test dataset and print the predicted class labels.</p>
+<div id="knn-by-hand" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> euclidean_distance(p1, p2):</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.sqrt(np.<span class="bu">sum</span>((p1 <span class="op">-</span> p2)<span class="op">**</span><span class="dv">2</span>))</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> knn_predict(X_train, y_train, X_test, k<span class="op">=</span><span class="dv">5</span>):</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    predictions <span class="op">=</span> []</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> test_point <span class="kw">in</span> X_test:</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>        distances <span class="op">=</span> [euclidean_distance(test_point, x) <span class="cf">for</span> x <span class="kw">in</span> X_train]</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>        k_indices <span class="op">=</span> np.argsort(distances)[:k]</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>        k_labels <span class="op">=</span> [y_train[i] <span class="cf">for</span> i <span class="kw">in</span> k_indices]</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>        majority <span class="op">=</span> Counter(k_labels).most_common(<span class="dv">1</span>)[<span class="dv">0</span>][<span class="dv">0</span>]</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>        predictions.append(majority)</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array(predictions)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="predict-with-manual-knn-and-print-results" class="level3">
+<h3 class="anchored" data-anchor-id="predict-with-manual-knn-and-print-results">Predict with Manual KNN and Print Results</h3>
+<div id="knn-manual-predict" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare training and test matrices</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> np.column_stack((x1, x2))</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> y</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>X_test_vals <span class="op">=</span> np.column_stack((x1_test, x2_test))</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>y_test_vals <span class="op">=</span> y_test</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Run manual KNN prediction</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>y_pred_manual <span class="op">=</span> knn_predict(X_train, y_train, X_test_vals, k<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Manual KNN predictions (first 10):"</span>)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y_pred_manual[:<span class="dv">10</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Manual KNN predictions (first 10):
+[0 0 0 1 1 0 0 0 1 0]</code></pre>
+</div>
+</div>
+<p>The output above shows the first 10 predictions made by our manual K-Nearest Neighbors implementation. Each value corresponds to the predicted class label (<code>0</code> or <code>1</code>) for a test data point, based on the majority class among its 5 nearest neighbors in the training set. This confirms that the custom function is generating class predictions as expected, which can now be compared to the ground truth labels or validated against a standard library implementation.</p>
+</section>
+<section id="evaluating-accuracy-across-k-values" class="level3">
+<h3 class="anchored" data-anchor-id="evaluating-accuracy-across-k-values">Evaluating Accuracy Across K Values</h3>
+<p>To determine the optimal number of neighbors for classification, we evaluate the accuracy of our manual KNN implementation across values of <code>k</code> from 1 to 30. For each <code>k</code>, we compute the percentage of correctly classified points in the test set and visualize the results. The goal is to identify which value of <code>k</code> yields the highest classification accuracy.</p>
+<div id="cell-knn-k-accuracy-plot" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>k_values <span class="op">=</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">31</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>accuracies <span class="op">=</span> []</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> k_values:</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    y_pred_k <span class="op">=</span> knn_predict(X_train, y_train, X_test_vals, k<span class="op">=</span>k)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    accuracy <span class="op">=</span> np.mean(y_pred_k <span class="op">==</span> y_test_vals)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    accuracies.append(accuracy <span class="op">*</span> <span class="dv">100</span>)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>plt.plot(k_values, accuracies, marker<span class="op">=</span><span class="st">'o'</span>)</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"KNN Accuracy vs. K Value"</span>)</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Number of Neighbors (k)"</span>)</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Accuracy (%)"</span>)</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hw4_questions (1)_files/figure-html/knn-k-accuracy-plot-output-1.png" id="knn-k-accuracy-plot" width="659" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>The plot displays classification accuracy as a function of the number of neighbors used in KNN. The optimal <span class="in">`k`</span> is the value that achieves the highest accuracy on the test dataset, providing the best generalization performance. This helps balance model complexity and prediction stability.</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>Based on the accuracy plot, the optimal value of <span class="in">`k`</span> is either **1 or 2**, as both yield the highest classification accuracy (~94%) on the test set. This suggests that very local decision boundaries perform best for this particular dataset.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
