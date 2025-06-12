@@ -666,7 +666,8 @@ In this section, we assume that the number of reviews is a valid proxy for the n
 import pandas as pd
 import numpy as np
 
-df = pd.read_csv("/Users/hanhuazhu/Desktop/mywebsite/blog/project2/airbnb.csv")
+#df = pd.read_csv("/Users/hanhuazhu/Desktop/mywebsite/blog/project2/airbnb.csv")
+df = pd.read_csv("~/Downloads/airbnb.csv")
 df.head()
 ```
 

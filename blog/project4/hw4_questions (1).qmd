@@ -21,7 +21,7 @@ After running our custom implementation, we visualize the clustering result and 
 We begin by loading the Palmer Penguins dataset and selecting the two numerical variables: **bill length** and **flipper length**. We standardize them to ensure fair distance calculations.
 ```{python}
 #| label: load-and-standardize
-#| echo: true
+#| echo: false
 #| warning: false
 #| message: false
 
@@ -173,7 +173,7 @@ We plot how clusters evolve over the first 4 iterations.
 
 ```{python}
 #| label: visualize-steps
-#| echo: true
+#| echo: false
 
 fig, axes = plt.subplots(2, 2, figsize=(12, 10))
 axes = axes.flatten()
@@ -304,7 +304,7 @@ The Silhouette Score is highest at **K = 2**, but only slightly higher than at *
 
 ```{python}
 #| label: animate-kmeans
-#| echo: true
+#| echo: false
 #| warning: false
 
 import matplotlib.pyplot as plt
@@ -489,7 +489,7 @@ To determine the optimal number of neighbors for classification, we evaluate the
 
 ```{python}
 #| label: knn-k-accuracy-plot
-#| echo: true
+#| echo: false
 
 import matplotlib.pyplot as plt
 
@@ -511,11 +511,10 @@ plt.grid(True)
 plt.show()
 ```
 
-```markdown
 The plot displays classification accuracy as a function of the number of neighbors used in KNN. The optimal `k` is the value that achieves the highest accuracy on the test dataset, providing the best generalization performance. This helps balance model complexity and prediction stability.
 
 Based on the accuracy plot, the optimal value of `k` is either **1 or 2**, as both yield the highest classification accuracy (~94%) on the test set. This suggests that very local decision boundaries perform best for this particular dataset.
-```
+
 
 
 
